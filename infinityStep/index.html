@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Stairs 3K - 무한의 계단 3칸</title>
+    <link rel="stylesheet" href="./style.css">
+    <!-- Google Fonts: Orbitron for Neon, Roboto for UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- 상단 네비게이션: 로고 (홈 이동) -->
+        <header>
+            <div id="logo" class="clickable">INF-STAIRS-3K</div>
+        </header>
+
+        <!-- 게임 점수 및 정보 -->
+        <div id="ui-overlay">
+            <div id="score-container">
+                <div class="label">SCORE</div>
+                <div id="current-score">0</div>
+            </div>
+            <div id="best-score-container">
+                <div class="label">BEST</div>
+                <div id="best-score">0</div>
+            </div>
+            <div id="time-gauge-wrapper">
+                <div id="time-gauge"></div>
+            </div>
+        </div>
+
+        <!-- 메인 게임 캔버스 -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- 시작/게임오버 화면 -->
+        <div id="menu-overlay" class="visible">
+            <div class="content">
+                <h1 id="menu-title">READY?</h1>
+                <p id="menu-subtitle">Press [Enter] to Start</p>
+                <div class="controls-guide">
+                    <div class="key-guide">
+                        <span class="key">←</span>
+                        <span class="desc">Jump Left</span>
+                    </div>
+                    <div class="key-guide">
+                        <span class="key">→</span>
+                        <span class="desc">Jump Right</span>
+                    </div>
+                </div>
+                <button id="start-button">START SESSION</button>
+            </div>
+        </div>
+
+        <!-- Toast 메시지 컨테이너 -->
+        <div id="toast-container"></div>
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>

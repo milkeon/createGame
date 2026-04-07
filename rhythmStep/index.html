@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RhythmStep - Neon Orbit</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <a href="index.html" id="logo-link" style="text-decoration: none;"><div id="logo">RHYTHM-STEP</div></a>
+            <div id="mode-selector">
+                <button id="btn-gaming" class="mode-btn active">GAMING</button>
+                <button id="btn-custom" class="mode-btn">CUSTOM EDIT</button>
+            </div>
+        </header>
+        <div id="editor-guide" class="hidden">
+            <div class="guide-item"><span class="key" style="border:1px solid var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.8rem;">← ↑ ↓ →</span> <span>방향 설정</span></div>
+            <div class="guide-item"><span class="key" style="border:1px solid var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.8rem;">SPACE</span> <span>박자 기록 (타일 생성)</span></div>
+            <div class="guide-item"><span class="key" style="border:1px solid var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.8rem;">ESC</span> <span>완료 및 저장</span></div>
+        </div>
+        <div id="ui-overlay">
+            <div class="stat"><div class="label">COMBO</div><div id="current-combo">0</div></div>
+            <div class="stat" style="text-align: right;"><div class="label">PERFECT</div><div id="perfect-count">0</div></div>
+        </div>
+        <canvas id="game-canvas"></canvas>
+        <div id="menu-overlay" class="visible">
+            <div class="content">
+                <h1 id="menu-title">RHYTHM STEP</h1>
+                <p id="menu-subtitle">모차르트 터키 행진곡, 당신만의 리듬으로</p>
+                <div id="main-mode-selector">
+                    <div class="mode-card" id="card-gaming">
+                        <h3>GAMING MODE</h3>
+                        <p class="mode-desc">직접 만든 맵이나 기본 맵 플레이</p>
+                        <button class="start-btn" onclick="setModeAndStart('GAMING')">PLAY SESSION</button>
+                    </div>
+                    <div class="mode-card" id="card-custom">
+                        <h3>EDITOR MODE</h3>
+                        <p class="mode-desc">음악에 맞춰 직접 타일 배치</p>
+                        <div class="music-config">
+                            <div class="config-row">
+                                <label for="music-upload" class="upload-label">🎵 로컬 파일</label>
+                                <input type="file" id="music-upload" accept="audio/*">
+                            </div>
+                            <div class="config-row">
+                                <input type="text" id="youtube-url" placeholder="YouTube URL 붙여넣기">
+                            </div>
+                            <div class="config-row bpm-row">
+                                <span>BPM:</span>
+                                <input type="number" id="input-bpm" value="126" min="60" max="300">
+                            </div>
+                        </div>
+                        <button class="start-btn style-custom" onclick="setModeAndStart('CUSTOM')">OPEN EDITOR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="yt-player-container">
+            <div id="yt-player"></div>
+        </div>
+        <div id="toast-container"></div>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
