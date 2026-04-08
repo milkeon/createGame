@@ -1,35 +1,32 @@
-// Game Universe Platform Logic
+import { db } from './firebase-config.js';
+import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop';
-const KEY_GAMES = 'GAMES_LIST';
-
-// 초기 데이터
-const INITIAL_GAMES = [
-    {
-        id: Date.now(),
-        title: 'INFINITY STEP',
-        url: 'game.html',
-        thumb: 'thumb_infinity.png'
-    }
-];
 
 let games = [];
 
 // 초기화
 function init() {
-    const savedGames = localStorage.getItem(KEY_GAMES);
-    if (savedGames) {
-        games = JSON.parse(savedGames);
-    } else {
-        games = INITIAL_GAMES;
-        saveGames();
-    }
-    renderGames();
+    setupFirestoreRealtime();
     setupEventListeners();
 }
 
-function saveGames() {
-    localStorage.setItem(KEY_GAMES, JSON.stringify(games));
+// Firestore 실시간 리스너 설정
+function setupFirestoreRealtime() {
+    const gamesRef = collection(db, "games");
+    const q = query(gamesRef, orderBy("createdAt", "desc"));
+
+    // 실시간 데이터 구독
+    onSnapshot(q, (snapshot) => {
+        games = [];
+        snapshot.forEach((doc) => {
+            games.push({ id: doc.id, ...doc.data() });
+        });
+        renderGames();
+    }, (error) => {
+        console.error("Firestore Error:", error);
+        showToast("데이터를 불러오는 중 오류가 발생했습니다.", "error");
+    });
 }
 
 function renderGames() {
@@ -37,6 +34,12 @@ function renderGames() {
     if (!grid) return;
 
     grid.innerHTML = '';
+    
+    // 기본 게임이 하나도 없는 경우를 방지 (첫 렌더링 시 데모 데이터)
+    if (games.length === 0) {
+        grid.innerHTML = '<div class="no-games">게임을 불러오고 있습니다...</div>';
+    }
+
     games.forEach(game => {
         const card = document.createElement('div');
         card.className = 'game-card';
@@ -56,26 +59,24 @@ function renderGames() {
 }
 
 // 모달 제어
-function openModal() {
+window.openModal = function() {
     const modal = document.getElementById('add-modal');
     modal.classList.remove('hidden');
-    // 제목 입력 필드에 자동 포커스
     setTimeout(() => {
         document.getElementById('game-title').focus();
     }, 100);
 }
 
-function closeModal() {
+window.closeModal = function() {
     const modal = document.getElementById('add-modal');
     modal.classList.add('hidden');
-    // 입력 필드 초기화
     document.getElementById('game-title').value = '';
     document.getElementById('game-url').value = '';
     document.getElementById('game-thumb').value = '';
 }
 
 // 새 게임 추가
-function addNewGame() {
+window.addNewGame = async function() {
     const titleVal = document.getElementById('game-title').value.trim();
     const urlVal = document.getElementById('game-url').value.trim();
     const thumbVal = document.getElementById('game-thumb').value.trim();
@@ -85,47 +86,57 @@ function addNewGame() {
         return;
     }
 
-    const newGame = {
-        id: Date.now(),
-        title: titleVal.toUpperCase(),
-        url: urlVal,
-        thumb: thumbVal || DEFAULT_THUMB
-    };
+    try {
+        const btn = document.getElementById('submit-game');
+        btn.disabled = true;
+        btn.innerText = 'SAVING...';
 
-    games.push(newGame);
-    saveGames();
-    renderGames();
-    closeModal();
-    showToast(`"${titleVal}" 게임이 추가되었습니다!`, 'success');
+        await addDoc(collection(db, "games"), {
+            title: titleVal.toUpperCase(),
+            url: urlVal,
+            thumb: thumbVal || DEFAULT_THUMB,
+            createdAt: serverTimestamp()
+        });
+
+        window.closeModal();
+        showToast(`"${titleVal}" 게임이 추가되었습니다!`, 'success');
+    } catch (e) {
+        console.error("Add error:", e);
+        showToast("서버 저장 중 오류가 발생했습니다.", "error");
+    } finally {
+        const btn = document.getElementById('submit-game');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = 'SAVE GAME';
+        }
+    }
 }
 
 // 이벤트 리스너 설정
 function setupEventListeners() {
-    // Esc 키로 모달 닫기
     window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') window.closeModal();
     });
 
-    // 엔터 키 대응
     const inputs = ['game-title', 'game-url', 'game-thumb'];
     inputs.forEach(id => {
         const input = document.getElementById(id);
         if (input) {
             input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addNewGame();
+                if (e.key === 'Enter') window.addNewGame();
             });
         }
     });
+
+    // 전역 함수 등록 (HTML onclick 대응)
 }
 
-// 토스트 메시지
 function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
+    if (!container) return;
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <span class="toast-msg">${message}</span>
-    `;
+    toast.innerHTML = `<span class="toast-msg">${message}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {

@@ -54,6 +54,9 @@ const PYTHON_CONCEPTS = {
     ]
 };
 
+import { db } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 const bestScoreEl = document.getElementById('best-score');
@@ -663,6 +666,9 @@ function checkAllGameOver() {
         document.getElementById('menu-result-area').innerHTML = html;
         menuOverlay.classList.add('visible');
 
+        // [New] Firebase에 점수 저장
+        saveScoresToFirebase(results);
+
         // 게임 종료 후 랜딩 화면에서 학습 사이드바 다시 표시 (드로어 모드)
         const drawer = document.getElementById('learning-drawer');
         const panel = document.getElementById('learning-info');
@@ -673,6 +679,27 @@ function checkAllGameOver() {
             drawer.classList.remove('open'); // 닫힌 상태
             renderLandingLearningList(); // 게임 종료 후 리스트 갱신
         }
+    }
+}
+
+// Firebase 점수 저장 함수
+async function saveScoresToFirebase(results) {
+    try {
+        const batch = results.map(async (res) => {
+            if (res.score <= 0) return; // 0점은 저장하지 않음
+
+            await addDoc(collection(db, "scores"), {
+                playerId: res.id + 1,
+                score: res.score,
+                gameMode: playerCount === 1 ? "1P" : (playerCount === 2 ? "2P" : "3P"),
+                timestamp: serverTimestamp()
+            });
+        });
+
+        await Promise.all(batch);
+        console.log("All scores saved to Firebase.");
+    } catch (e) {
+        console.error("Error saving scores:", e);
     }
 }
 
