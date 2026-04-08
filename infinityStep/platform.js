@@ -9,6 +9,9 @@ let isEditMode = false;
 let currentEditingId = null;
 let selectedFile = null;
 
+let currentSlideIndex = 0;
+let carouselInterval = null;
+
 // 초기화
 function init() {
     setupFirestoreRealtime();
@@ -26,10 +29,86 @@ function setupFirestoreRealtime() {
             games.push({ id: doc.id, ...doc.data() });
         });
         renderGames();
+        renderCarousel();
     }, (error) => {
         console.error("Firestore Error:", error);
         showToast("데이터를 불러오는 중 오류가 발생했습니다.", "error");
     });
+}
+
+function renderCarousel() {
+    const track = document.getElementById('carousel-track');
+    const dotsContainer = document.getElementById('carousel-dots');
+    if (!track || !dotsContainer || games.length === 0) return;
+
+    track.innerHTML = '';
+    dotsContainer.innerHTML = '';
+
+    games.forEach((game, index) => {
+        // Create Slide
+        const slide = document.createElement('div');
+        slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+        const thumbUrl = game.thumb || DEFAULT_THUMB;
+        slide.style.setProperty('--bg-img', `url('${thumbUrl}')`);
+        
+        slide.innerHTML = `
+            <div class="slide-content">
+                <span class="badge">FEATURED</span>
+                <h2>${game.title}</h2>
+                <p>지금 바로 모험을 시작하고 새로운 기록에 도전하세요!</p>
+                <button class="play-btn-large" onclick="location.href='${game.url}'">PLAY NOW</button>
+            </div>
+        `;
+        track.appendChild(slide);
+
+        // Create Dot
+        const dot = document.createElement('div');
+        dot.className = `dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+
+    currentSlideIndex = 0;
+    startCarouselTimer();
+}
+
+window.moveCarousel = function(step) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    if (slides.length === 0) return;
+
+    let nextIndex = currentSlideIndex + step;
+    if (nextIndex >= slides.length) nextIndex = 0;
+    if (nextIndex < 0) nextIndex = slides.length - 1;
+
+    goToSlide(nextIndex);
+};
+
+function goToSlide(index) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.dot');
+    if (slides.length === 0) return;
+
+    slides[currentSlideIndex].classList.remove('active');
+    dots[currentSlideIndex].classList.remove('active');
+
+    currentSlideIndex = index;
+
+    slides[currentSlideIndex].classList.add('active');
+    dots[currentSlideIndex].classList.add('active');
+
+    // Reset timer on manual move
+    startCarouselTimer();
+}
+
+function startCarouselTimer() {
+    stopCarouselTimer();
+    carouselInterval = setInterval(() => {
+        window.moveCarousel(1);
+    }, 5000);
+}
+
+function stopCarouselTimer() {
+    if (carouselInterval) clearInterval(carouselInterval);
 }
 
 function renderGames() {

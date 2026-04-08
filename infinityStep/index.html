@@ -32,13 +32,18 @@
         </header>
 
         <main>
-            <section class="hero">
-                <div class="hero-content">
-                    <span class="badge">FEATURED</span>
-                    <h2 id="hero-title">INFINITY STEP</h2>
-                    <p>도전하라, 끝없는 계단의 정점으로!</p>
-                    <button class="play-btn-large" onclick="location.href='game.html'">PLAY NOW</button>
+            <section class="hero-carousel" id="featured-carousel">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Dynamic slides will be injected here -->
+                    <div class="loading-slide">로딩 중...</div>
                 </div>
+                
+                <!-- Carousel Controls -->
+                <button class="carousel-control prev" onclick="moveCarousel(-1)">❮</button>
+                <button class="carousel-control next" onclick="moveCarousel(1)">❯</button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators" id="carousel-dots"></div>
             </section>
 
             <section class="game-grid-section">
