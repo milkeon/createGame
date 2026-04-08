@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Stairs 3K - 무한의 계단 3칸</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./learning.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600;700&family=Orbitron:wght@700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 상단 네비게이션: 로고 -->
+        <header>
+            <div id="logo" onclick="location.href='index.html'">Antigravity</div>
+        </header>
+
+        <!-- 게임 점수 및 정보 (1P / 2P 레이아웃) -->
+        <div id="ui-overlay" class="single-player">
+            <!-- 1P HUD -->
+            <div id="p1-ui" class="player-hud">
+                <div class="score-container">
+                    <div class="label">P1 SCORE</div>
+                    <div id="current-score-p1">0</div>
+                </div>
+                <div class="life-container">
+                    <div class="label">P1 LIFE</div>
+                    <div id="hearts-p1">❤️❤️❤️</div>
+                    <div class="time-gauge-wrapper-mini">
+                        <div id="time-gauge-p1" class="time-gauge"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2P HUD (Center/Right depending on mode) -->
+            <div id="p2-ui" class="player-hud hidden">
+                <div class="score-container">
+                    <div class="label">P2 SCORE</div>
+                    <div id="current-score-p2">0</div>
+                </div>
+                <div class="life-container">
+                    <div class="label">P2 LIFE</div>
+                    <div id="hearts-p2">❤️❤️❤️</div>
+                    <div class="time-gauge-wrapper-mini">
+                        <div id="time-gauge-p2" class="time-gauge"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3P HUD (Rightmost) -->
+            <div id="p3-ui" class="player-hud hidden">
+                <div class="score-container">
+                    <div class="label">P3 SCORE</div>
+                    <div id="current-score-p3">0</div>
+                </div>
+                <div class="life-container">
+                    <div class="label">P3 LIFE</div>
+                    <div id="hearts-p3">❤️❤️❤️</div>
+                    <div class="time-gauge-wrapper-mini">
+                        <div id="time-gauge-p3" class="time-gauge"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="common-ui">
+                <div id="best-score-container">
+                    <div class="label">최고 점수</div>
+                    <div id="best-score">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 파이썬 학습 사이드바 -->
+        <div id="learning-drawer">
+            <button id="learning-toggle" onclick="toggleLearningPanel()">
+                <div class="toggle-content">
+                    <div class="toggle-arrow">◀</div>
+                    <span class="key-hint">F2</span>
+                </div>
+            </button>
+            <div id="learning-info" class="hidden">
+                <div class="drawer-header">PYTHON ALGORITHM</div>
+                <div id="learning-content">
+                    <!-- 동적으로 생성된 .learning-card들이 여기에 추가됨 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 게임 캔버스 (중간 레이어, 배경 투명) -->
+        <canvas id="game-canvas" style="z-index: 2; position: relative; background: transparent;"></canvas>
+
+        <!-- 시작/게임오버 화면 -->
+        <div id="menu-overlay" class="visible">
+            <div class="content">
+                <h1 id="menu-title">인피니티 스텝 3K</h1>
+                <div id="menu-result-area"></div>
+
+                <div id="menu-instruction">숫자를 눌러 시작하세요</div>
+                <div class="menu-buttons">
+                    <button id="start-button-1p" onclick="setPlayerAndStart(1)">
+                        <div class="btn-key">1</div>
+                        <div class="btn-text">1인용</div>
+                    </button>
+                    <button id="start-button-2p" onclick="setPlayerAndStart(2)" class="style-secondary">
+                        <div class="btn-key">2</div>
+                        <div class="btn-text">2인용</div>
+                    </button>
+                </div>
+
+                <div class="controls-guide">
+                    <div class="player-guide">
+                        <div class="guide-title">1P 조작</div>
+                        <div class="keys-container">
+                            <span class="key-box">A</span>
+                            <span class="key-box">D</span>
+                            <span class="desc">또는 방향키</span>
+                        </div>
+                    </div>
+                    <div class="player-guide p2-guide">
+                        <div class="guide-title">2P 조작</div>
+                        <div class="keys-container">
+                            <span class="key-box">←</span>
+                            <span class="key-box">→</span>
+                            <span class="desc">방향키 조작</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="pause-overlay" class="hidden">
+            <div class="pause-content">
+                <div class="pause-text">PAUSED</div>
+                <div class="pause-subtext">계속하려면 ENTER, 종료하려면 ESC</div>
+            </div>
+        </div>
+
+        <!-- Toast 메시지 컨테이너 -->
+        <div id="toast-container"></div>
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
