@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "public": true,
+  "cleanUrls": true,
+  "framework": null,
+  "outputDirectory": "infinityStep",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/infinityStep/$1"
+    }
+  ],
+  "installCommand": "echo 'Skipping install in root'",
+  "buildCommand": "echo 'Serving infinityStep locally'"
+}
