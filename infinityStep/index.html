@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinity Stairs 3K - 무한의 계단 3칸</title>
     <link rel="stylesheet" href="./style.css">
-    <!-- Premium Fonts: Outfit for dynamic headers, Inter for clean UI -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./learning.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600;700&family=Orbitron:wght@700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div id="app">
-        <!-- 상단 네비게이션: 로고 (홈 이동) -->
+        <!-- 상단 네비게이션: 로고 -->
+        <header>
+            <div id="logo" onclick="location.href='../index.html'">Antigravity</div>
+        </header>
+
         <!-- 게임 점수 및 정보 (1P / 2P 레이아웃) -->
         <div id="ui-overlay" class="single-player">
             <!-- 1P HUD -->
@@ -58,7 +66,6 @@
                 </div>
             </div>
 
-            <!-- 공통 최고 점수 (중앙 상단) -->
             <div id="common-ui">
                 <div id="best-score-container">
                     <div class="label">최고 점수</div>
@@ -67,15 +74,31 @@
             </div>
         </div>
 
-        <!-- 메인 게임 캔버스 -->
-        <canvas id="game-canvas"></canvas>
+        <!-- 파이썬 학습 사이드바 -->
+        <div id="learning-drawer">
+            <button id="learning-toggle" onclick="toggleLearningPanel()">
+                <div class="toggle-content">
+                    <div class="toggle-arrow">◀</div>
+                    <span class="key-hint">F2</span>
+                </div>
+            </button>
+            <div id="learning-info" class="hidden">
+                <div class="drawer-header">PYTHON ALGORITHM</div>
+                <div id="learning-content">
+                    <!-- 동적으로 생성된 .learning-card들이 여기에 추가됨 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 게임 캔버스 (중간 레이어, 배경 투명) -->
+        <canvas id="game-canvas" style="z-index: 2; position: relative; background: transparent;"></canvas>
 
         <!-- 시작/게임오버 화면 -->
         <div id="menu-overlay" class="visible">
             <div class="content">
                 <h1 id="menu-title">인피니티 스텝 3K</h1>
                 <div id="menu-result-area"></div>
-                
+
                 <div id="menu-instruction">숫자를 눌러 시작하세요</div>
                 <div class="menu-buttons">
                     <button id="start-button-1p" onclick="setPlayerAndStart(1)">
@@ -109,9 +132,24 @@
             </div>
         </div>
 
+        <!-- Pause Overlay -->
+        <div id="pause-overlay" class="hidden">
+            <div class="pause-content">
+                <div class="pause-text">PAUSED</div>
+                <div class="pause-subtext">계속하려면 ENTER, 종료하려면 ESC</div>
+            </div>
+        </div>
+
         <!-- Toast 메시지 컨테이너 -->
         <div id="toast-container"></div>
     </div>
     <script type="module" src="./main.js"></script>
 </body>
+
+</html>
+<div id="toast-container"></div>
+</div>
+<script type="module" src="./main.js"></script>
+</body>
+
 </html>
