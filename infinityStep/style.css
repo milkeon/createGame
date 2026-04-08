@@ -1,32 +1,41 @@
 :root {
     --primary: #00f3ff;
     --secondary: #ff00ff;
-    --background: #0d0d0d;
-    --text: #ffffff;
-    --glass: rgba(255, 255, 255, 0.1);
-    --neon-blur: 10px;
-    --shadow: 0 0 15px rgba(0, 0, 243, 150);
+    --bg-dark: #121420; /* 조금 더 밝은 네이비 톤으로 변경 */
+    --neon-cyan: #00f3ff;
+    --neon-pink: #ff00ff;
+    --glass-white: rgba(255, 255, 255, 0.12); /* 더 밝게 */
+    --glass-border: rgba(255, 255, 255, 0.2); /* 더 선명하게 */
 }
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Orbitron', 'Roboto', sans-serif;
-    outline: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    background: var(--background);
-    color: var(--text);
+    background-color: var(--bg-dark);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
     overflow: hidden;
     user-select: none;
+    cursor: default; /* 기본 커서 */
+}
+
+/* 게임 중 커서 숨기기 */
+#app.playing {
+    cursor: none !important;
 }
 
 #app {
-    position: relative;
     width: 100vw;
     height: 100vh;
+    position: relative;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+    transition: cursor 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,36 +64,225 @@ header {
     text-shadow: 0 0 10px var(--secondary);
 }
 
-/* UI Overlay */
+/* UI Overlay & HUD */
 #ui-overlay {
     position: absolute;
-    top: 20px;
+    top: 40px;
+    left: 0;
     width: 100%;
-    max-width: 1200px;
-    pointer-events: none;
-    z-index: 50;
     display: flex;
     justify-content: space-between;
     padding: 0 40px;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 100;
 }
 
-.label {
+.player-hud {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.5s ease;
+}
+
+#ui-overlay.single-player #p1-ui {
+    position: absolute;
+    left: 40px;
+}
+
+#ui-overlay.three-player {
+    justify-content: space-between;
+}
+
+#ui-overlay.three-player .player-hud {
+    width: 30%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.life-container {
+    text-align: left;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 12px 24px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+.life-container .label {
+    font-family: 'Outfit', sans-serif;
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    margin-bottom: 4px;
 }
 
-#current-score {
-    font-size: 3rem;
-    font-weight: 700;
-    text-shadow: 0 0 15px var(--primary);
+#hearts-p1, #hearts-p2 {
+    font-size: 1.8rem !important; /* 크기 대폭 상향 */
+    filter: drop-shadow(0 0 10px #ff0000) !important; /* 강렬한 레드 글로우 */
+    color: #ff3333 !important;
+    letter-spacing: 5px;
+    display: inline-block;
 }
 
-#best-score {
-    font-size: 1.8rem;
-    color: var(--secondary);
-    text-shadow: 0 0 10px var(--secondary);
+#menu-instruction {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    padding: 12px 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    border-bottom: 4px solid var(--neon-cyan);
 }
+
+.score-container {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 35px;
+    border-radius: 24px;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.score-container .label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+    margin-bottom: 2px;
+}
+
+[id^="current-score-"] {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.8rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+    line-height: 1;
+}
+
+/* 타임 게이지 재조정 */
+.time-gauge-wrapper-mini {
+    width: 220px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 15px;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.time-gauge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #00f3ff, #00ff88);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+}
+
+#p2-ui .score-container {
+    border-color: #ff00ff;
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
+}
+
+#p2-ui [id^="current-score-"] {
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+}
+
+.time-gauge {
+    height: 100%;
+    width: 100%;
+    background: #00f3ff;
+    background: linear-gradient(90deg, #00f3ff, #00ff88);
+    box-shadow: 0 0 15px #00f3ff;
+    transition: width 0.1s linear;
+}
+
+#p2-ui .time-gauge {
+    background: #ff00ff;
+    background: linear-gradient(90deg, #ff00ff, #bc13fe);
+    box-shadow: 0 0 15px #ff00ff;
+}
+
+#hearts {
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+#menu-result-area {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column; /* 위아래로 배치 */
+    align-items: center;
+    gap: 30px;
+}
+
+.result-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+}
+
+.result-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.result-card.winner {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+    background: rgba(0, 243, 255, 0.05);
+    transform: scale(1.1);
+}
+
+.result-card.p2-color.winner {
+    border-color: #ff00ff;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+    background: rgba(255, 0, 255, 0.05);
+}
+
+.winner-badge, .rank-badge {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #eaff00; /* 네온 옐로우 */
+    color: #000;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(234, 255, 0, 0.4);
+}
+
+.winner-badge {
+    background: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+}
+
+.p-label { font-size: 13px; opacity: 0.7; margin-bottom: 8px; font-weight: 700; }
+.p-score { font-size: 3.5rem; font-weight: 900; line-height: 1; }
 
 #time-gauge-wrapper {
     position: absolute;
@@ -121,15 +319,16 @@ canvas {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* 0.85 -> 0.4로 훨씬 투명하게 변경 */
-    backdrop-filter: blur(4px); /* 블러 강도 완화 */
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 200;
+    align-items: center;
+    z-index: 2000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #menu-overlay.visible {
@@ -137,23 +336,42 @@ canvas {
     visibility: visible;
 }
 
-.content {
+#menu-overlay .content {
+    background: rgba(15, 15, 25, 0.95);
+    padding: 40px 60px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
     text-align: center;
-    padding: 40px;
-    background: var(--glass);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    animation: slideUp 0.6s ease-out;
+    max-width: 650px; /* 더 콤팩트하게 축소 */
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px; /* 요소 간 간격 확대 */
 }
 
 #menu-title {
-    font-size: 3.5rem;
-    margin-bottom: 10px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.5rem; /* 제목 크기 축소 */
+    font-weight: 800;
+    margin-bottom: 0; 
+    color: #fff;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    letter-spacing: 1px;
+}
+
+#menu-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--neon-cyan);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--neon-cyan);
 }
 
 #menu-subtitle {
@@ -163,33 +381,143 @@ canvas {
     letter-spacing: 2px;
 }
 
-.controls-guide {
+/* 한글 메뉴 및 가이드 스타일 고도화 */
+.menu-buttons {
     display: flex;
+    flex-direction: row; /* 수평 정렬 */
     justify-content: center;
-    gap: 30px;
-    margin-bottom: 40px;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
 }
 
-.key-guide {
+.menu-buttons button {
+    flex: 1;
+    max-width: 240px;
+    height: 100px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 5px;
+    box-shadow: 0 6px 0 #005566;
 }
 
-.key {
-    background: #222;
-    padding: 10px 20px;
+.menu-buttons button.style-secondary {
+    background: linear-gradient(135deg, #ff00ff, #990099);
+    box-shadow: 0 6px 0 #660066;
+}
+
+.btn-key {
+    background: #000;
+    color: #fff;
+    font-size: 1.8rem; /* 축소 */
+    font-weight: 800;
+    padding: 2px 15px;
+    border-radius: 10px;
+    border: 1.5px solid #fff;
+}
+
+.btn-text {
+    color: #ffffff !important;
+    font-size: 1.2rem; /* 축소 */
+    font-weight: 800;
+}
+
+.controls-guide {
+    display: flex;
+    gap: 50px;
+    opacity: 0.7;
+    margin-top: 10px;
+}
+
+.player-guide {
+    text-align: center;
+}
+
+.guide-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.key-box {
+    width: 38px; /* 축소 */
+    height: 38px; /* 축소 */
+    background: #ffffff;
+    border: 2px solid #cccccc;
+    border-bottom-width: 4px;
     border-radius: 8px;
-    border: 1px solid var(--primary);
-    box-shadow: 0 0 10px var(--primary);
-    font-size: 1.5rem;
-    color: var(--primary);
+    font-size: 1rem;
+    color: #111111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 점수 팝업 애니메이션 */
+@keyframes scorePop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.score-updated {
+    animation: scorePop 0.3s ease-out;
+}
+
+.p2-guide .key {
+    text-shadow: 0 0 5px #ff00ff;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 0, 255, 0.2);
 }
 
 .desc {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 5px;
+}
+
+/* Controls Guide for 1P/2P */
+.controls-guide {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 40px;
+}
+
+.player-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.guide-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+}
+
+.p2-guide .guide-title {
+    color: #ff00ff;
+}
+
+.keys {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.key-inline {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-cyan);
 }
 
 button {
@@ -255,4 +583,13 @@ button:active {
 /* Animations */
 .clickable:active {
     transform: scale(0.95);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.blinking {
+    animation: blink 0.2s infinite;
 }
