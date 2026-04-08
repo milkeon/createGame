@@ -50,6 +50,33 @@ header {
     border-bottom: 1px solid var(--glass-border);
 }
 
+.header-btns {
+    display: flex;
+    gap: 15px;
+}
+
+#edit-mode-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--secondary);
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: var(--secondary);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.1);
+}
+
+#edit-mode-btn.active {
+    background: var(--secondary);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
 #platform-logo {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.6rem;
@@ -207,6 +234,28 @@ header {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 243, 255, 0.2);
 }
 
+.game-grid.edit-mode .game-card {
+    border-color: var(--secondary);
+    animation: wiggle 0.5s infinite ease-in-out;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(-1deg); }
+    50% { transform: rotate(1deg); }
+}
+
+.game-grid.edit-mode .game-card::after {
+    content: 'EDITING';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 900;
+}
+
 .thumb-container {
     width: 100%;
     height: 140px;
@@ -314,14 +363,64 @@ header {
 
 .input-group input {
     width: 100%;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
-    padding: 14px;
-    border-radius: 12px;
+    border-radius: 8px;
     color: #fff;
-    font-family: 'Outfit', sans-serif;
-    outline: none;
+    font-family: inherit;
     transition: all 0.3s;
+}
+
+.thumb-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-input {
+    border: 1px dashed var(--glass-border) !important;
+    background: transparent !important;
+    cursor: pointer;
+}
+
+.upload-divider {
+    text-align: center;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.thumb-preview {
+    margin-top: 15px;
+    position: relative;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 150px;
+}
+
+#preview-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.remove-thumb {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--secondary);
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+}
+
+.thumb-preview.hidden {
+    display: none;
 }
 
 .input-group input:focus {

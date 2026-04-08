@@ -19,10 +19,16 @@
                 <h1 id="platform-logo">GAME UNIVERSE</h1>
                 <div class="logo-accent"></div>
             </div>
-            <button id="add-game-btn" onclick="openModal()">
-                <span class="btn-icon">+</span>
-                <span class="btn-text">ADD NEW GAME</span>
-            </button>
+            <div class="header-btns">
+                <button id="edit-mode-btn" onclick="toggleEditMode()">
+                    <span class="btn-icon">✎</span>
+                    <span class="btn-text">EDIT MODE</span>
+                </button>
+                <button id="add-game-btn" onclick="openModal()">
+                    <span class="btn-icon">+</span>
+                    <span class="btn-text">ADD NEW GAME</span>
+                </button>
+            </div>
         </header>
 
         <main>
@@ -46,11 +52,11 @@
             </section>
         </main>
 
-        <!-- ADD GAME MODAL -->
+        <!-- ADD/EDIT GAME MODAL -->
         <div id="add-modal" class="modal-overlay hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>ADD NEW ADVENTURE</h2>
+                    <h2 id="modal-title">ADD NEW ADVENTURE</h2>
                     <button class="close-btn" onclick="closeModal()">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -63,10 +69,18 @@
                         <input type="text" id="game-url" placeholder="https://..." autocomplete="off">
                     </div>
                     <div class="input-group">
-                        <label for="game-thumb">THUMBNAIL URL (OPTIONAL)</label>
-                        <input type="text" id="game-thumb" placeholder="https://image-url..." autocomplete="off">
+                        <label for="game-thumb">THUMBNAIL (FILE OR URL)</label>
+                        <div class="thumb-upload-container">
+                            <input type="file" id="game-thumb-file" accept="image/*" class="file-input" onchange="previewThumb(this)">
+                            <div class="upload-divider">OR</div>
+                            <input type="text" id="game-thumb" placeholder="https://image-url..." autocomplete="off">
+                        </div>
+                        <div id="thumb-preview" class="thumb-preview hidden">
+                            <img src="" id="preview-img" alt="Preview">
+                            <button class="remove-thumb" onclick="clearThumb()">REMOVE</button>
+                        </div>
                     </div>
-                    <button id="submit-game" class="submit-btn" onclick="addNewGame()">SAVE GAME</button>
+                    <button id="submit-game" class="submit-btn" onclick="handleGameSubmit()">SAVE GAME</button>
                 </div>
             </div>
         </div>
@@ -75,6 +89,6 @@
         <div id="toast-container"></div>
     </div>
 
-    <script type="module" src="platform.js"></script>
+    <script type="module" src="platform.js?v=1.2"></script>
 </body>
 </html>
