@@ -418,43 +418,107 @@ canvas {
 
 /* Menus */
 #menu-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    background: rgba(10, 10, 15, 0.98);
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* 3열 배치: 좌(Global) - 중(Menu) - 우(Local) */
     align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
     z-index: 2000;
+    color: white;
     opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    backdrop-filter: blur(10px);
 }
 
 #menu-overlay.visible {
     opacity: 1;
-    visibility: visible;
+    pointer-events: auto;
 }
 
-#menu-overlay .content {
-    background: rgba(15, 15, 25, 0.95);
-    padding: 40px 60px;
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
-    text-align: center;
-    max-width: 650px;
-    /* 더 콤팩트하게 축소 */
-    width: 85%;
+/* 랭킹 사이드바 공통 스타일 */
+.leaderboard-side {
+    width: 300px;
+    height: 80vh;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 25px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.leaderboard-side h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+}
+
+/* 모드별 그룹 스타일 */
+.mode-rank-group, .local-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+}
+
+.mode-rank-group h4 {
+    font-size: 0.85rem;
+    color: var(--neon-magenta);
+    opacity: 0.8;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* 랭킹 아이템 스타일 */
+.rank-item, .local-item {
+    display: flex;
     align-items: center;
-    gap: 40px;
-    /* 요소 간 간격 확대 */
+    gap: 10px;
+    margin-bottom: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+
+.rank-item .n { width: 18px; color: #ffd600; font-weight: 800; font-size: 0.85rem; }
+.rank-item .nm { flex: 1; color: rgba(255, 255, 255, 0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-item .s { color: var(--neon-cyan); font-weight: 600; font-size: 0.85rem; }
+
+.local-item .m { width: 30px; color: var(--neon-magenta); font-weight: 600; font-size: 0.75rem; }
+.local-item .n { flex: 1; color: rgba(255, 255, 255, 0.6); }
+.local-item .s { color: #39ff14; font-weight: 600; text-shadow: 0 0 5px rgba(57, 255, 20, 0.2); }
+
+/* 중앙 메인 메뉴 래퍼 */
+.menu-content-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    background: rgba(20, 20, 30, 0.8);
+    padding: 40px 50px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 550px;
+    width: 90%;
+    backdrop-filter: blur(15px);
 }
 
 #menu-title {
