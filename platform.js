@@ -2,7 +2,7 @@ import { db, storage } from './firebase-config.js';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-const DEFAULT_THUMB = './game.png';
+const DEFAULT_THUMB = '/game.png';
 
 let games = [];
 let isEditMode = false;

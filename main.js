@@ -130,20 +130,26 @@ window.quitToHome = function () {
 // [New] 글로벌 랭킹 데이터 가져오기 (Top 3)
 async function fetchGlobalRankings() {
     try {
-        const modes = ["1P", "2P", "3P"];
+        const modes = ["1P", "2P"]; // 3P 제외
         for (const mode of modes) {
-            const q = query(
-                collection(db, "scores"),
-                where("gameMode", "==", mode),
-                orderBy("score", "desc"),
-                limit(3)
-            );
-            const querySnapshot = await getDocs(q);
-            globalRankings[mode] = querySnapshot.docs.map(doc => doc.data());
+            try {
+                const q = query(
+                    collection(db, "scores"),
+                    where("gameMode", "==", mode),
+                    orderBy("score", "desc"),
+                    limit(3)
+                );
+                const querySnapshot = await getDocs(q);
+                globalRankings[mode] = querySnapshot.docs.map(doc => doc.data());
+            } catch (err) {
+                console.warn(`[Index Required] Fetching global ranks for ${mode} failed. Please click the link in the console.`, err);
+                globalRankings[mode] = [];
+            }
         }
         renderLeaderboards();
     } catch (e) {
-        console.error("Error fetching rankings:", e);
+        console.error("Critical fetch rank error:", e);
+        renderLeaderboards(); // 로컬이라도 보여주기 위해 호출
     }
 }
 
@@ -151,27 +157,38 @@ async function fetchGlobalRankings() {
 function loadLocalBest() {
     const saved = localStorage.getItem('infinity_step_local_best');
     if (saved) {
-        localBest = JSON.parse(saved);
-    } else {
-        // 초기 데이터가 없는 경우 0으로 세팅
-        localStorage.setItem('infinity_step_local_best', JSON.stringify(localBest));
+        try {
+            const parsed = JSON.parse(saved);
+            // 데이터 구조가 구버전(단순 숫자)인 경우 마이그레이션
+            ["1P", "2P"].forEach(mode => {
+                if (typeof parsed[mode] === 'number') {
+                    localBest[mode] = { score: parsed[mode], name: "User" };
+                } else if (parsed[mode]) {
+                    localBest[mode] = parsed[mode];
+                }
+            });
+        } catch (e) {
+            console.warn("LocalBest parse error, resetting...", e);
+        }
     }
 }
 
 // [New] 최고점 저장 (로컬 + 파이어베이스)
 async function saveRecord(mode, score, name) {
     if (score <= 0) return;
+    if (mode === '3P') return; // 3인용은 저장하지 않음
     
     // 로컬 업데이트
-    if (score > localBest[mode].score) {
+    if (score > (localBest[mode] ? localBest[mode].score : 0)) {
         localBest[mode] = { score, name };
+        localStorage.setItem(`infinity_step_name_${mode}`, name); // 이름 개별 저장
         localStorage.setItem('infinity_step_local_best', JSON.stringify(localBest));
     }
 
     // 파이어베이스 저장
     try {
         await addDoc(collection(db, "scores"), {
-            name: name || "Anonymous",
+            playerName: name || "Anonymous", // 필드명 playerName으로 통일
             score: score,
             gameMode: mode,
             timestamp: serverTimestamp()
@@ -652,9 +669,14 @@ function handleKeyDown(e) {
     }
 
     if (menuOverlay.classList.contains('visible')) {
-        if (e.key === '1') setPlayerAndStart(1);
-        if (e.key === '2') setPlayerAndStart(2);
-        if (e.key === '3') setPlayerAndStart(3);
+        const nameModal = document.getElementById('name-input-modal');
+        const isModalOpen = nameModal && !nameModal.classList.contains('hidden');
+        
+        if (!isModalOpen) {
+            if (e.key === '1') setPlayerAndStart(1);
+            if (e.key === '2') setPlayerAndStart(2);
+            if (e.key === '3') setPlayerAndStart(3);
+        }
         return;
     }
 
@@ -745,17 +767,21 @@ function checkAllGameOver() {
 
 // [New] 랭킹 처리 통합 함수
 async function handleRankingAtGameOver(results) {
-    const modeStr = playerCount === 1 ? "1P" : (playerCount === 2 ? "2P" : "3P");
+    // 3인용은 랭킹 시스템에서 완전히 배제 (사용자 요청)
+    if (playerCount === 3) return;
+
+    const modeStr = playerCount === 1 ? "1P" : "2P";
     const topResult = results[0]; // 현재 판의 1위
 
     // 1위 점수가 기존 로컬 최고점보다 높은지 체크
-    const isNewLocalBest = topResult.score > localBest[modeStr].score;
+    const currentBest = localBest[modeStr] ? localBest[modeStr].score : 0;
+    const isNewLocalBest = topResult.score > currentBest;
 
     if (isNewLocalBest) {
         // 최고 기록 경신 시 UI 처리
         showHighScoreInput(modeStr, topResult.score);
     } else {
-        // 최고점 아니더라도 익명 기록은 남김
+        // 최고점 아니더라도 기록은 남김 (익명)
         await saveRecord(modeStr, topResult.score, "Anonymous");
     }
 }
@@ -804,37 +830,47 @@ window.submitRecord = function(mode, score) {
     hideNameModal();
 };
 
-// [New] 랭킹 보드 렌더링 (UI 레이아웃 작업 시 상세 구현)
+// [New] 랭킹 보드 렌더링
 function renderLeaderboards() {
     const globalBoard = document.getElementById('global-leaderboard');
     const localBoard = document.getElementById('local-best-board');
     if (!globalBoard || !localBoard) return;
 
-    // 글로벌 랭킹 렌더링
-    let globalHtml = '<h3>GLOBAL TOP 3</h3>';
-    ["1P", "2P", "3P"].forEach(mode => {
-        globalHtml += `<div class="mode-rank-group"><h4>${mode} MODE</h4>`;
+    // 글로벌 랭킹 렌더링 (1인용, 2인용 표시)
+    let globalHtml = '<h3>명예의 전당</h3>';
+    ["1P", "2P"].forEach(mode => {
+        const title = mode === "1P" ? "1인용 기록" : "2인용 기록";
+        globalHtml += `<div class="mode-rank-group"><h4>${title}</h4>`;
         const ranks = globalRankings[mode];
         if (ranks && ranks.length > 0) {
             ranks.forEach((res, i) => {
-                globalHtml += `<div class="rank-item"><span class="n">${i+1}</span> <span class="nm">${res.name}</span> <span class="s">${res.score}</span></div>`;
+                // 구버전(name)과 신버전(playerName) 하이브리드 지원
+                const displayName = res.playerName || res.name || 'Anonymous';
+                globalHtml += `
+                    <div class="rank-item">
+                        <span class="n">${i + 1}</span>
+                        <span class="nm">${displayName}</span>
+                        <span class="s">${res.score}</span>
+                    </div>
+                `;
             });
         } else {
-            globalHtml += `<div class="no-data">기록 없음</div>`;
+            globalHtml += `<div class="no-data">색인 생성 중...</div>`;
         }
         globalHtml += `</div>`;
     });
     globalBoard.innerHTML = globalHtml;
 
-    // 로컬 최고점 렌더링
-    let localHtml = '<h3>MY BEST</h3>';
-    ["1P", "2P", "3P"].forEach(mode => {
-        const best = localBest[mode];
+    // 로컬 최고점 렌더링 (1인용, 2인용 표시)
+    let localHtml = '<h3>내 최고 기록</h3>';
+    ["1P", "2P"].forEach(mode => {
+        const title = mode === "1P" ? "1인용 기록" : "2인용 기록";
+        const best = localBest[mode] || { name: '-', score: 0 };
         localHtml += `
             <div class="local-item">
-                <span class="m">${mode}</span>
-                <span class="n">${best.name}</span>
-                <span class="s">${best.score}</span>
+                <span class="m">${title}</span>
+                <span class="n">${best.name || '-'}</span>
+                <span class="s">${best.score || 0}</span>
             </div>
         `;
     });

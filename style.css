@@ -91,6 +91,7 @@ header {
     align-items: center; /* 모든 내부 요소 정중앙 정렬 */
     gap: 15px;
     transition: all 0.5s ease;
+    margin: 0 40px; /* 화면 가장자리에서 살짝 띄움 (사용자 요청 반영) */
 }
 
 #ui-overlay.single-player #p1-ui {
