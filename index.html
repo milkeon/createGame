@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Universe | Premium Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="platform.css">
+</head>
+<body>
+    <div id="platform-app">
+        <!-- Background FX -->
+        <div class="bg-glow"></div>
+        <div class="bg-particles" id="particles"></div>
+
+        <header>
+            <div class="logo-container" onclick="location.href='/'" style="cursor: pointer;">
+                <h1 id="platform-logo">GAME UNIVERSE</h1>
+                <div class="logo-accent"></div>
+            </div>
+            <div class="header-btns">
+                <button id="edit-mode-btn" onclick="toggleEditMode()">
+                    <span class="btn-icon">✎</span>
+                    <span class="btn-text">EDIT MODE</span>
+                </button>
+                <button id="add-game-btn" onclick="openModal()">
+                    <span class="btn-icon">+</span>
+                    <span class="btn-text">ADD NEW GAME</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero-carousel" id="featured-carousel">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Dynamic slides will be injected here -->
+                    <div class="loading-slide">로딩 중...</div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="carousel-control prev" onclick="moveCarousel(-1)">❮</button>
+                <button class="carousel-control next" onclick="moveCarousel(1)">❯</button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators" id="carousel-dots"></div>
+            </section>
+
+            <section class="game-grid-section">
+                <div class="section-header">
+                    <h3>GAME LIBRARY</h3>
+                    <div class="line"></div>
+                </div>
+                <div id="game-grid" class="game-grid">
+                    <!-- 게임 카드가 여기에 동적으로 추가됨 -->
+                </div>
+            </section>
+        </main>
+
+        <!-- ADD/EDIT GAME MODAL -->
+        <div id="add-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">ADD NEW ADVENTURE</h2>
+                    <button class="close-btn" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="game-title">GAME TITLE</label>
+                        <input type="text" id="game-title" placeholder="Enter game title..." autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="game-url">GAME URL URL</label>
+                        <input type="text" id="game-url" placeholder="https://..." autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="game-thumb">THUMBNAIL (FILE OR URL)</label>
+                        <div class="thumb-upload-container">
+                            <input type="file" id="game-thumb-file" accept="image/*" class="file-input" onchange="previewThumb(this)">
+                            <div class="upload-divider">OR</div>
+                            <input type="text" id="game-thumb" placeholder="https://image-url..." autocomplete="off">
+                        </div>
+                        <div id="thumb-preview" class="thumb-preview hidden">
+                            <img src="" id="preview-img" alt="Preview">
+                            <button class="remove-thumb" onclick="clearThumb()">REMOVE</button>
+                        </div>
+                    </div>
+                    <button id="submit-game" class="submit-btn" onclick="handleGameSubmit()">SAVE GAME</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Container -->
+        <div id="toast-container"></div>
+    </div>
+
+    <script type="module" src="platform.js?v=1.2"></script>
+</body>
+</html>
