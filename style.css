@@ -88,6 +88,7 @@ header {
 .player-hud {
     display: flex;
     flex-direction: column;
+    align-items: center; /* 모든 내부 요소 정중앙 정렬 */
     gap: 15px;
     transition: all 0.5s ease;
 }
@@ -128,7 +129,10 @@ header {
     border: 2px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    width: 100%; /* 너비 통일 */
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 라이프 내부 요소도 중앙 정렬 */
 }
 
 .life-container .label {
@@ -189,8 +193,39 @@ header {
     margin-bottom: 5px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* 텍스트와 아이콘 중앙 정렬 */
     gap: 10px;
+}
+
+/* 마우스 아이콘 스타일 */
+.mouse-icon {
+    width: 20px;
+    height: 30px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.mouse-icon::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 6px;
+    background: #fff;
+    border-radius: 2px;
+}
+
+.mouse-icon.left {
+    background: linear-gradient(90deg, var(--neon-cyan) 50%, transparent 50%);
+}
+
+.mouse-icon.right {
+    background: linear-gradient(90deg, transparent 50%, var(--neon-cyan) 50%);
 }
 
 .key-hint-img {
