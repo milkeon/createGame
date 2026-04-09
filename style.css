@@ -154,12 +154,14 @@ header {
 #hearts-p1,
 #hearts-p2,
 #hearts-p3 {
-    font-size: 1.8rem !important;
-    /* 크기 대폭 상향 */
-    filter: drop-shadow(0 0 10px #ff0000) !important;
-    /* 강렬한 레드 글로우 */
-    color: #ff3333 !important;
-    letter-spacing: 5px;
+    font-size: 2.5rem !important; /* 크기 대폭 상향 */
+    color: #ff2d55 !important;
+    text-shadow: 
+        0 0 10px #ff0000,
+        0 0 20px #ff0000,
+        0 0 30px #ff0000; /* 강렬한 네온 글로우 */
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+    letter-spacing: 8px;
     display: inline-block;
 }
 

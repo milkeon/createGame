@@ -61,7 +61,7 @@ header {
     text-shadow: 0 0 10px var(--primary);
     cursor: pointer;
     transition: all 0.3s ease;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     padding: 5px 15px;
     border-radius: 8px;
 }
@@ -93,9 +93,11 @@ header {
 }
 
 #ui-overlay.single-player #p1-ui {
-    width: calc(100% - 80px); /* 패딩 고려 */
+    width: calc(100% - 80px);
+    /* 패딩 고려 */
     display: flex;
-    flex-direction: row-reverse; /* 라이프(좌), 스코어(우) 배치를 위해 순서 반전 */
+    flex-direction: row-reverse;
+    /* 라이프(좌), 스코어(우) 배치를 위해 순서 반전 */
     justify-content: space-between;
     align-items: flex-start;
 }
@@ -141,13 +143,16 @@ header {
 }
 
 #hearts-p1,
-#hearts-p2 {
-    font-size: 1.8rem !important;
-    /* 크기 대폭 상향 */
-    filter: drop-shadow(0 0 10px #ff0000) !important;
-    /* 강렬한 레드 글로우 */
-    color: #ff3333 !important;
-    letter-spacing: 5px;
+#hearts-p2,
+#hearts-p3 {
+    font-size: 2.5rem !important; /* 크기 대폭 상향 */
+    color: #ff2d55 !important;
+    text-shadow: 
+        0 0 10px #ff0000,
+        0 0 20px #ff0000,
+        0 0 30px #ff0000; /* 강렬한 네온 글로우 */
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+    letter-spacing: 8px;
     display: inline-block;
 }
 
