@@ -196,12 +196,12 @@ header {
 .key-hint-img {
     height: 24px;
     width: auto;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)) invert(1);
     opacity: 0.9;
 }
 
 .key-hint-img.mouse {
-    height: 30px;
+    height: 28px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
 }
 
 .mouse-hints {
@@ -512,19 +512,18 @@ canvas {
 }
 
 .key-box {
-    width: 38px;
-    /* 축소 */
-    height: 38px;
-    /* 축소 */
+    width: 28px;
+    height: 28px;
     background: #ffffff;
-    border: 2px solid #cccccc;
-    border-bottom-width: 4px;
-    border-radius: 8px;
-    font-size: 1rem;
+    border: 1px solid #cccccc;
+    border-bottom-width: 3px;
+    border-radius: 6px;
+    font-size: 0.8rem;
     color: #111111;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin: 0 2px;
 }
 
 /* 점수 팝업 애니메이션 */
