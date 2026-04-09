@@ -48,13 +48,13 @@ function renderCarousel() {
         // Create Slide
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
-        
+
         // 경로 정규화 로직 추가
         let thumbUrl = game.thumb || DEFAULT_THUMB;
-        if (thumbUrl.includes('assets/game.png')) thumbUrl = DEFAULT_THUMB;
-        
+        if (thumbUrl.includes('game.png')) thumbUrl = DEFAULT_THUMB;
+
         slide.style.setProperty('--bg-img', `url('${thumbUrl}')`);
-        
+
         slide.innerHTML = `
             <div class="slide-content">
                 <span class="badge">FEATURED</span>
@@ -76,7 +76,7 @@ function renderCarousel() {
     startCarouselTimer();
 }
 
-window.moveCarousel = function(step) {
+window.moveCarousel = function (step) {
     const slides = document.querySelectorAll('.carousel-slide');
     if (slides.length === 0) return;
 
@@ -120,7 +120,7 @@ function renderGames() {
     if (!grid) return;
 
     grid.innerHTML = '';
-    
+
     if (games.length === 0) {
         grid.innerHTML = '<div class="no-games">게임을 불러오고 있습니다...</div>';
     }
@@ -141,11 +141,11 @@ function renderGames() {
                 location.href = game.url;
             }
         };
-        
+
         // 경로 정규화 (구버전 assets 경로 대응)
         let thumbUrl = game.thumb || DEFAULT_THUMB;
-        if (thumbUrl.includes('assets/game.png')) thumbUrl = DEFAULT_THUMB;
-        
+        if (thumbUrl.includes('game.png')) thumbUrl = DEFAULT_THUMB;
+
         card.innerHTML = `
             ${isEditMode ? `<button class="delete-card-btn" onclick="event.stopPropagation(); window.deleteGame('${game.id}', '${game.title}')">×</button>` : ''}
             <div class="thumb-container">
@@ -163,7 +163,7 @@ function renderGames() {
 }
 
 // 에디트 모드 토글
-window.toggleEditMode = function() {
+window.toggleEditMode = function () {
     isEditMode = !isEditMode;
     const btn = document.getElementById('edit-mode-btn');
     if (isEditMode) {
@@ -178,7 +178,7 @@ window.toggleEditMode = function() {
 }
 
 // 게임 삭제 처리
-window.deleteGame = async function(id, title) {
+window.deleteGame = async function (id, title) {
     if (confirm(`"${title}" 게임을 정말로 삭제하시겠습니까?`)) {
         try {
             await deleteDoc(doc(db, "games", id));
@@ -191,11 +191,11 @@ window.deleteGame = async function(id, title) {
 }
 
 // 썸네일 미리보기
-window.previewThumb = function(input) {
+window.previewThumb = function (input) {
     if (input.files && input.files[0]) {
         selectedFile = input.files[0];
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const preview = document.getElementById('thumb-preview');
             const img = document.getElementById('preview-img');
             img.src = e.target.result;
@@ -207,7 +207,7 @@ window.previewThumb = function(input) {
     }
 }
 
-window.clearThumb = function() {
+window.clearThumb = function () {
     selectedFile = null;
     document.getElementById('game-thumb-file').value = '';
     document.getElementById('thumb-preview').classList.add('hidden');
@@ -215,12 +215,12 @@ window.clearThumb = function() {
 }
 
 // 모달 제어
-window.openModal = function() {
+window.openModal = function () {
     currentEditingId = null;
     window.clearThumb();
     document.getElementById('modal-title').innerText = 'ADD NEW ADVENTURE';
     document.getElementById('submit-game').innerText = 'SAVE GAME';
-    
+
     const modal = document.getElementById('add-modal');
     modal.classList.remove('hidden');
     setTimeout(() => {
@@ -228,7 +228,7 @@ window.openModal = function() {
     }, 100);
 }
 
-window.openEditModal = function(game) {
+window.openEditModal = function (game) {
     currentEditingId = game.id;
     window.clearThumb();
     document.getElementById('modal-title').innerText = 'EDIT ADVENTURE';
@@ -245,7 +245,7 @@ window.openEditModal = function(game) {
     }, 100);
 }
 
-window.closeModal = function() {
+window.closeModal = function () {
     const modal = document.getElementById('add-modal');
     modal.classList.add('hidden');
     document.getElementById('game-title').value = '';
@@ -286,7 +286,7 @@ async function processImage(file) {
 }
 
 // 게임 추가 또는 수정 처리
-window.handleGameSubmit = async function() {
+window.handleGameSubmit = async function () {
     const titleVal = document.getElementById('game-title').value.trim();
     const urlVal = document.getElementById('game-url').value.trim();
     let thumbVal = document.getElementById('game-thumb').value.trim();
