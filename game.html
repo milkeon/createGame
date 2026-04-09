@@ -137,11 +137,12 @@
 
         <!-- Pause Overlay -->
         <div id="pause-overlay" class="hidden">
-            <div class="pause-content">
-                <div class="pause-text">PAUSED</div>
-                <div class="pause-subtext">계속하려면 ENTER, 종료하려면 ESC</div>
-            </div>
+            <div class="pause-actions">
+            <button class="menu-btn primary" onclick="togglePause()">RESUME GAME</button>
+            <button class="menu-btn secondary" onclick="clearAllScores()">RESET ALL SCORES</button>
+            <button class="menu-btn secondary" onclick="quitToHome()">QUIT TO MENU</button>
         </div>
+    </div>
 
         <!-- Toast 메시지 컨테이너 -->
         <div id="toast-container"></div>
