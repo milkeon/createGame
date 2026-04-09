@@ -94,9 +94,12 @@ header {
 }
 
 #ui-overlay.single-player #p1-ui {
-    width: calc(100% - 80px); /* 패딩 고려 */
+    width: 100%; /* 패딩은 부모가 가짐 */
+    padding: 0 40px; /* 좌우 여백 확보 */
+    box-sizing: border-box;
     display: flex;
-    flex-direction: row-reverse; /* 라이프(좌), 스코어(우) 배치를 위해 순서 반전 */
+    flex-direction: row-reverse;
+    /* 라이프(좌), 스코어(우) 배치를 위해 순서 반전 */
     justify-content: space-between;
     align-items: flex-start;
 }
