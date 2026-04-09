@@ -48,7 +48,11 @@ function renderCarousel() {
         // Create Slide
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
-        const thumbUrl = game.thumb || DEFAULT_THUMB;
+        
+        // 경로 정규화 로직 추가
+        let thumbUrl = game.thumb || DEFAULT_THUMB;
+        if (thumbUrl.includes('assets/game.png')) thumbUrl = DEFAULT_THUMB;
+        
         slide.style.setProperty('--bg-img', `url('${thumbUrl}')`);
         
         slide.innerHTML = `
@@ -138,10 +142,14 @@ function renderGames() {
             }
         };
         
+        // 경로 정규화 (구버전 assets 경로 대응)
+        let thumbUrl = game.thumb || DEFAULT_THUMB;
+        if (thumbUrl.includes('assets/game.png')) thumbUrl = DEFAULT_THUMB;
+        
         card.innerHTML = `
             ${isEditMode ? `<button class="delete-card-btn" onclick="event.stopPropagation(); window.deleteGame('${game.id}', '${game.title}')">×</button>` : ''}
             <div class="thumb-container">
-                <img src="${game.thumb || DEFAULT_THUMB}" alt="${game.title}" onerror="this.src='${DEFAULT_THUMB}'">
+                <img src="${thumbUrl}" alt="${game.title}" onerror="this.src='${DEFAULT_THUMB}'">
             </div>
             <div class="card-info">
                 <h4>${game.title}</h4>
