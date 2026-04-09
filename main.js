@@ -55,18 +55,16 @@ const PYTHON_CONCEPTS = {
 };
 
 import { db } from './firebase-config.js';
-import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
-const bestScoreEl = document.getElementById('best-score');
 const menuOverlay = document.getElementById('menu-overlay');
 const menuTitle = document.getElementById('menu-title');
 const toastContainer = document.getElementById('toast-container');
 const uiOverlay = document.getElementById('ui-overlay');
 const pauseOverlay = document.getElementById('pause-overlay');
 
-let bestScore = localStorage.getItem('bestScore') || 0;
 let lastTimestamp = 0;
 let instances = [];
 let playerCount = 1;
@@ -101,7 +99,7 @@ function togglePause() {
     }
 }
 
-window.quitToHome = function() {
+window.quitToHome = function () {
     isPaused = false;
     pauseOverlay.classList.add('hidden');
     document.getElementById('app').classList.remove('playing');
@@ -110,14 +108,14 @@ window.quitToHome = function() {
     menuOverlay.classList.add('visible');
     const panel = document.getElementById('learning-info');
     if (panel) panel.classList.remove('hidden'); // 히든 제거하여 내용이 보이게 함
-    
+
     // 게임 모드 해제 및 드로어 복구
     const drawer = document.getElementById('learning-drawer');
     if (drawer) {
         drawer.classList.remove('game-mode');
         drawer.style.display = 'flex';
     }
-    
+
     renderLandingLearningList(); // 홈으로 올 때 리스트 갱신
 }
 
@@ -127,17 +125,17 @@ window.quitToHome = function() {
 function renderLandingLearningList() {
     const content = document.getElementById('learning-content');
     if (!content) return;
-    
+
     content.innerHTML = '';
     const learned = getLearnedConcepts();
-    
+
     for (const category in PYTHON_CONCEPTS) {
         PYTHON_CONCEPTS[category].forEach(concept => {
             const isFinished = learned.includes(concept.id);
             const card = document.createElement('div');
             // 완료된 카드면 .landing-item(회색) 클래스를 뺌
             card.className = `learning-card ${isFinished ? '' : 'landing-item'}`;
-            
+
             card.innerHTML = `
                 <div class="learning-header">
                     <span class="learning-category">${category}</span>
@@ -318,12 +316,6 @@ class GameInstance {
         }
 
         this.updateUI();
-
-        if (this.score > bestScore) {
-            bestScore = this.score;
-            bestScoreEl.textContent = bestScore;
-            localStorage.setItem('bestScore', bestScore);
-        }
 
         this.generateStair();
         this.createShockwave(this.player.col, this.player.y);
@@ -525,7 +517,6 @@ class GameInstance {
 
 function init() {
     canvas.width = CANVAS_WIDTH; canvas.height = CANVAS_HEIGHT;
-    bestScoreEl.textContent = bestScore;
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('contextmenu', (e) => {
@@ -700,34 +691,6 @@ async function saveScoresToFirebase(results) {
         console.log("All scores saved to Firebase.");
     } catch (e) {
         console.error("Error saving scores:", e);
-    }
-}
-
-// 모든 최고 기록 삭제 함수
-window.clearAllScores = async function() {
-    if (!confirm("모든 기종의 최고 점수 기록을 완전히 삭제하시겠습니까? (되돌릴 수 없습니다)")) return;
-    
-    try {
-        // 1. LocalStorage 초기화
-        localStorage.removeItem('bestScore');
-        bestScore = 0;
-        bestScoreEl.textContent = "0";
-
-        // 2. Firestore 'scores' 컬렉션 전체 삭제
-        const querySnapshot = await getDocs(collection(db, "scores"));
-        const deletePromises = [];
-        querySnapshot.forEach((document) => {
-            deletePromises.push(deleteDoc(doc(db, "scores", document.id)));
-        });
-
-        await Promise.all(deletePromises);
-        showToast("모든 기록이 초기화되었습니다.", "success");
-        
-        // UI 갱신 (메뉴 결과창 등)
-        document.getElementById('menu-result-area').innerHTML = '';
-    } catch (e) {
-        console.error("Error clearing scores:", e);
-        showToast("기록 삭제 중 오류가 발생했습니다.", "error");
     }
 }
 
