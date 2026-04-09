@@ -24,7 +24,13 @@
             <!-- 1P HUD -->
             <div id="p1-ui" class="player-hud">
                 <div class="score-container">
-                    <div class="label">P1 SCORE</div>
+                    <div class="label">
+                        P1 SCORE
+                        <span class="key-box">A</span>
+                        <span class="key-box">D</span>
+                        <span class="key-box">←</span>
+                        <span class="key-box">→</span>
+                    </div>
                     <div id="current-score-p1">0</div>
                 </div>
                 <div class="life-container">
@@ -39,7 +45,11 @@
             <!-- 2P HUD (Center/Right depending on mode) -->
             <div id="p2-ui" class="player-hud hidden">
                 <div class="score-container">
-                    <div class="label">P2 SCORE</div>
+                    <div class="label">
+                        P2 SCORE
+                        <span class="key-box">←</span>
+                        <span class="key-box">→</span>
+                    </div>
                     <div id="current-score-p2">0</div>
                 </div>
                 <div class="life-container">
@@ -54,7 +64,11 @@
             <!-- 3P HUD (Rightmost) -->
             <div id="p3-ui" class="player-hud hidden">
                 <div class="score-container">
-                    <div class="label">P3 SCORE</div>
+                    <div class="label">
+                        P3 SCORE
+                        <div class="mouse-icon left"></div>
+                        <div class="mouse-icon right"></div>
+                    </div>
                     <div id="current-score-p3">0</div>
                 </div>
                 <div class="life-container">
@@ -66,12 +80,8 @@
                 </div>
             </div>
 
-            <div id="common-ui">
-                <div id="best-score-container">
-                    <div class="label">최고 점수</div>
-                    <div id="best-score">0</div>
-                </div>
-            </div>
+            <!-- 최고 점수 영역 삭제됨 -->
+            <div id="common-ui" class="hidden"></div>
         </div>
 
         <!-- 파이썬 학습 사이드바 -->
