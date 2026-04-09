@@ -1,5 +1,5 @@
 import { db, storage } from './firebase-config.js';
-import { collection, addDoc, updateDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
 const DEFAULT_THUMB = './game.png';
@@ -139,6 +139,7 @@ function renderGames() {
         };
         
         card.innerHTML = `
+            ${isEditMode ? `<button class="delete-card-btn" onclick="event.stopPropagation(); window.deleteGame('${game.id}', '${game.title}')">×</button>` : ''}
             <div class="thumb-container">
                 <img src="${game.thumb || DEFAULT_THUMB}" alt="${game.title}" onerror="this.src='${DEFAULT_THUMB}'">
             </div>
@@ -160,12 +161,25 @@ window.toggleEditMode = function() {
     if (isEditMode) {
         btn.classList.add('active');
         btn.querySelector('.btn-text').innerText = 'EXIT EDIT';
-        showToast('편집 모드가 활성화되었습니다. 카드를 클릭해 수정하세요.', 'info');
+        showToast('편집 모드가 활성화되었습니다. 카드를 클릭해 수정하거나 X를 눌러 삭제하세요.', 'info');
     } else {
         btn.classList.remove('active');
         btn.querySelector('.btn-text').innerText = 'EDIT MODE';
     }
     renderGames();
+}
+
+// 게임 삭제 처리
+window.deleteGame = async function(id, title) {
+    if (confirm(`"${title}" 게임을 정말로 삭제하시겠습니까?`)) {
+        try {
+            await deleteDoc(doc(db, "games", id));
+            showToast(`"${title}" 게임이 성공적으로 삭제되었습니다.`, 'success');
+        } catch (e) {
+            console.error("Delete error:", e);
+            showToast("데이터 삭제 중 오류가 발생했습니다.", "error");
+        }
+    }
 }
 
 // 썸네일 미리보기
