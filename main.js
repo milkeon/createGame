@@ -55,7 +55,7 @@ const PYTHON_CONCEPTS = {
 };
 
 import { db } from './firebase-config.js';
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
@@ -700,6 +700,34 @@ async function saveScoresToFirebase(results) {
         console.log("All scores saved to Firebase.");
     } catch (e) {
         console.error("Error saving scores:", e);
+    }
+}
+
+// 모든 최고 기록 삭제 함수
+window.clearAllScores = async function() {
+    if (!confirm("모든 기종의 최고 점수 기록을 완전히 삭제하시겠습니까? (되돌릴 수 없습니다)")) return;
+    
+    try {
+        // 1. LocalStorage 초기화
+        localStorage.removeItem('bestScore');
+        bestScore = 0;
+        bestScoreEl.textContent = "0";
+
+        // 2. Firestore 'scores' 컬렉션 전체 삭제
+        const querySnapshot = await getDocs(collection(db, "scores"));
+        const deletePromises = [];
+        querySnapshot.forEach((document) => {
+            deletePromises.push(deleteDoc(doc(db, "scores", document.id)));
+        });
+
+        await Promise.all(deletePromises);
+        showToast("모든 기록이 초기화되었습니다.", "success");
+        
+        // UI 갱신 (메뉴 결과창 등)
+        document.getElementById('menu-result-area').innerHTML = '';
+    } catch (e) {
+        console.error("Error clearing scores:", e);
+        showToast("기록 삭제 중 오류가 발생했습니다.", "error");
     }
 }
 
