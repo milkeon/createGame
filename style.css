@@ -79,7 +79,7 @@ header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0 40px;
+    padding: 0; /* 정확한 3등분을 위해 패딩 제거 */
     box-sizing: border-box;
     pointer-events: none;
     z-index: 100;
@@ -114,7 +114,10 @@ header {
 }
 
 #ui-overlay.three-player .player-hud {
-    width: 30%;
+    width: 33.33%; /* 정확히 1/3 배분 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 요소들을 영역의 정중앙으로 */
 }
 
 .hidden {
@@ -129,10 +132,10 @@ header {
     border: 2px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    width: 100%; 
+    width: 260px; /* 스코어 박스와 너비 통일 */
     display: flex;
     flex-direction: column;
-    align-items: center; /* 라이프 내부 요소도 중앙 정렬 */
+    align-items: center; 
 }
 
 .life-container .label {
@@ -181,7 +184,7 @@ header {
     box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
     text-align: center;
     backdrop-filter: blur(10px);
-    width: 100%; /* 너비 통일 */
+    width: 260px; /* 고정 너비를 주어 라이프 박스와 통일감 형성 */
 }
 
 .score-container .label {
