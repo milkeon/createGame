@@ -760,42 +760,48 @@ async function handleRankingAtGameOver(results) {
     }
 }
 
-// [New] 이름 입력 UI 노출
+// [New] 이름 입력 UI 노출 (모달 방식)
 function showHighScoreInput(mode, score) {
-    const resultArea = document.getElementById('menu-result-area');
-    const inputHtml = `
-        <div class="new-record-alert animated pulse infinite">
-            <h3 style="color: #ff00ff; margin-bottom: 10px;">🏆 NEW LOCAL BEST!</h3>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">훌륭합니다! 명예의 전당에 이름을 남기세요.</p>
-            <div class="name-input-container">
-                <input type="text" id="player-name-input" maxlength="7" placeholder="이름 입력 (7자)" autofocus>
-                <button class="save-btn" onclick="submitRecord('${mode}', ${score})">기록 저장</button>
-            </div>
-        </div>
-    `;
-    resultArea.insertAdjacentHTML('beforeend', inputHtml);
+    const modal = document.getElementById('name-input-modal');
+    const scoreDisplay = document.getElementById('modal-score-display');
+    const input = document.getElementById('player-name-input');
+    const saveBtn = document.getElementById('modal-save-btn');
+
+    if (!modal || !scoreDisplay || !input || !saveBtn) return;
+
+    scoreDisplay.textContent = score;
+    input.value = ""; // 초기화
+    modal.classList.remove('hidden');
+
+    // 이벤트 리스너 재설정 (클론 사용으로 중복 방지)
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
     
+    newSaveBtn.onclick = () => submitRecord(mode, score);
+    
+    // 포커스 강제 (사용자 규칙: 인풋 있으면 항상 기본으로 커서가 잡히게)
     setTimeout(() => {
-        const input = document.getElementById('player-name-input');
-        if (input) {
-            input.focus();
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') submitRecord(mode, score);
-            });
-        }
+        input.focus();
+        input.onkeypress = (e) => {
+            if (e.key === 'Enter') submitRecord(mode, score);
+        };
     }, 100);
 }
 
+window.hideNameModal = function() {
+    const modal = document.getElementById('name-input-modal');
+    if (modal) modal.classList.add('hidden');
+};
+
 window.submitRecord = function(mode, score) {
     const input = document.getElementById('player-name-input');
-    const name = input ? input.value.trim() : "Player";
+    const name = input ? input.value.trim() : "";
     if (!name) {
         showToast("이름을 입력해주세요!", "warning");
         return;
     }
     saveRecord(mode, score, name);
-    const alert = document.querySelector('.new-record-alert');
-    if (alert) alert.remove();
+    hideNameModal();
 };
 
 // [New] 랭킹 보드 렌더링 (UI 레이아웃 작업 시 상세 구현)

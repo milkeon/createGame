@@ -159,6 +159,25 @@
             </div>
         </div>
 
+        <!-- 이름 입력 모달 (최고 기록 경신 시) -->
+        <div id="name-input-modal" class="hidden">
+            <div class="modal-content animated zoomIn">
+                <div class="modal-header">
+                    <span class="trophy">🏆</span>
+                    <h2>NEW RECORD!</h2>
+                </div>
+                <p>축하합니다! 명예의 전당에 이름을 남기세요.</p>
+                <div class="modal-body">
+                    <input type="text" id="player-name-input" maxlength="7" placeholder="NAME (7자)" autofocus>
+                    <div id="modal-score-display">0</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="save-btn" id="modal-save-btn">기록 저장</button>
+                    <button class="cancel-btn" onclick="hideNameModal()">나중에</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Toast 메시지 컨테이너 -->
         <div id="toast-container"></div>
     </div>
