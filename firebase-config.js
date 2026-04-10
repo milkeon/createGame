@@ -1,3 +1,7 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
 // Vite 환경 변수 접근 (리터럴 방식 사용 필수)
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
