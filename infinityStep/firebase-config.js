@@ -2,37 +2,28 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-// 환경 변수 안전하게 가져오기
-const getEnv = (key) => {
-    try {
-        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
-            return import.meta.env[key];
-        }
-        if (typeof process !== 'undefined' && process.env && process.env[key]) {
-            return process.env[key];
-        }
-    } catch (e) {
-        console.warn(`Environment variable ${key} access failed.`);
-    }
-    return "";
-};
-
+// Vite 환경 변수 접근 (리터럴 방식 필수)
 const firebaseConfig = {
-    apiKey: getEnv('VITE_FIREBASE_API_KEY'),
-    authDomain: getEnv('VITE_FIREBASE_AUTH_DOMAIN'),
-    projectId: getEnv('VITE_FIREBASE_PROJECT_ID'),
-    storageBucket: getEnv('VITE_FIREBASE_STORAGE_BUCKET'),
-    messagingSenderId: getEnv('VITE_FIREBASE_MESSAGING_SENDER_ID'),
-    appId: getEnv('VITE_FIREBASE_APP_ID'),
-    measurementId: getEnv('VITE_FIREBASE_MEASUREMENT_ID')
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-if (!firebaseConfig.apiKey) {
-    console.error("Firebase API Key is missing. Check your setup.");
-}
+let app, db, storage;
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+try {
+    if (!firebaseConfig.apiKey) throw new Error("Firebase Key Missing");
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    storage = getStorage(app);
+} catch (e) {
+    console.error("Firebase init failed:", e);
+    db = null;
+    storage = null;
+}
 
 export { db, storage };
