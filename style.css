@@ -733,6 +733,7 @@ canvas {
     font-weight: 800 !important;
     background: linear-gradient(90deg, #00f3ff, #ff00ff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 

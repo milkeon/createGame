@@ -343,13 +343,12 @@ class GameInstance {
         const nextY = maxY + STAIR_HEIGHT_STEP;
         const level = Math.round(nextY / STAIR_HEIGHT_STEP);
 
-        // 하드모드 분기 관리 (100계단 이후 30계단 주기)
+        // 하드모드 분기 관리 (100계단부터 30계단 주기: 100-129 분기, 130-159 합류...)
         if (playerCount === 1 && this.isHardMode && level >= 100) {
-            this.stepsSinceBranch++;
-            if (this.stepsSinceBranch >= 30) {
-                this.isBranched = !this.isBranched;
-                this.stepsSinceBranch = 0;
-            }
+            const cycle = Math.floor((level - 100) / 30);
+            this.isBranched = (cycle % 2 === 0);
+        } else {
+            this.isBranched = false;
         }
 
         // 계단에 알파벳 심기 (1인용 전용)
@@ -940,7 +939,7 @@ window.submitRecord = function (mode, score) {
 
 // [New] 랭킹 보드 렌더링
 function renderLeaderboards() {
-    updateGlobalLeaderboard();
+    // updateLocalLeaderboard가 글로벌/로컬을 모두 처리함
     updateLocalLeaderboard();
 }
 

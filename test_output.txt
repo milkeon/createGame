@@ -1,44 +1,48 @@
 
-> creategame@1.0.0 test
-> playwright test
+Running 5 tests using 1 worker
+
+BROWSER: [vite] connecting...
+BROWSER: ✔ Firebase initialized successfully
+BROWSER: [vite] connected.
+  ✓  1 tests/game_logic.spec.js:16:9 › Infinity Stairs 3K Enhanced Logic Tests › UI 전환: 1인용 클릭 시 난이도 선택 메뉴가 나타나는지 확인 (1.4s)
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+BROWSER: ✔ Firebase initialized successfully
+  ✓  2 tests/game_logic.spec.js:34:9 › Infinity Stairs 3K Enhanced Logic Tests › 디자인: 닉네임 유채색 그라데이션 스타일 적용 확인 (1.1s)
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+BROWSER: ✔ Firebase initialized successfully
+BROWSER: DEBUG: Last 10 stairs: Y:6400.00, Y:6560.00, Y:6720.00, Y:6880.00, Y:7040.00, Y:7200.00, Y:7360.00, Y:7520.00, Y:7680.00, Y:7840.00. Looking for Y:4040
+BROWSER: Testing Level 101 (Y=4040): Found 0 stairs.
+  ✘  3 tests/game_logic.spec.js:58:9 › Infinity Stairs 3K Enhanced Logic Tests › 물리 엔진: 하드모드 30계단 주기(100, 130, 160...) 분기/합류 확인 (1.0s)
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+BROWSER: ✔ Firebase initialized successfully
+  ✓  4 tests/game_logic.spec.js:95:9 › Infinity Stairs 3K Enhanced Logic Tests › F3 기능: 배경 학습 패널(display: none) 실제 은폐 확인 (1.0s)
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+BROWSER: ✔ Firebase initialized successfully
+  ✓  5 tests/game_logic.spec.js:113:9 › Infinity Stairs 3K Enhanced Logic Tests › 2인용: 시작부터 5칸 범위(min:3, max:7) 고정 확인 (965ms)
 
 
-Running 2 tests using 1 worker
+  1) tests/game_logic.spec.js:58:9 › Infinity Stairs 3K Enhanced Logic Tests › 물리 엔진: 하드모드 30계단 주기(100, 130, 160...) 분기/합류 확인 
 
-  ✘  1 tests/game.spec.js:9:7 › 인피니티 스텝 3K - 분기 시스템(Branching) 검증 › 장거리 생존 테스트: 1,000계단 돌파 및 분기 로직 검증 (3.0m)
-  ✘  2 tests/game.spec.js:50:7 › 인피니티 스텝 3K - 분기 시스템(Branching) 검증 › 분기 데이터 검증: 동일 높이에 두 개의 계단 존재 확인 (971ms)
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
 
+    Expected: [32m2[39m
+    Received: [31m0[39m
 
-  1) tests/game.spec.js:9:7 › 인피니티 스텝 3K - 분기 시스템(Branching) 검증 › 장거리 생존 테스트: 1,000계단 돌파 및 분기 로직 검증 
+      84 |
+      85 |         const state100 = await checkCycle(101); 
+    > 86 |         expect(state100.count).toBe(2);
+         |                                ^
+      87 |
+      88 |         const state130 = await checkCycle(131); 
+      89 |         expect(state130.count).toBe(1);
+        at /Users/milkeon/Desktop/AntiProj/createGame/tests/game_logic.spec.js:86:32
 
-    [31mTest timeout of 180000ms exceeded.[39m
+    Error Context: test-results/tests-game_logic-Infinity--6718f-0계단-주기-100-130-160-분기-합류-확인/error-context.md
 
-    Error: page.evaluate: Test timeout of 180000ms exceeded.
-
-      13 |     
-      14 |     // AI 자동 플레이 (분기 대응 로직 포함)
-    > 15 |     const finalScore = await page.evaluate(async () => {
-         |                                   ^
-      16 |       const wait = (ms) => new Promise(res => setTimeout(res, ms));
-      17 |       
-      18 |       for (let i = 0; i < 5000; i++) {
-        at /Users/milkeon/Desktop/AntiProj/createGame/tests/game.spec.js:15:35
-
-    Error Context: test-results/tests-game-인피니티-스텝-3K---분기-90aa2-존-테스트-1-000계단-돌파-및-분기-로직-검증/error-context.md
-
-  2) tests/game.spec.js:50:7 › 인피니티 스텝 3K - 분기 시스템(Branching) 검증 › 분기 데이터 검증: 동일 높이에 두 개의 계단 존재 확인 ─
-
-    Error: page.evaluate: TypeError: Cannot read properties of undefined (reading '0')
-        at eval (eval at evaluate (:302:30), <anonymous>:2:34)
-        at UtilityScript.evaluate (<anonymous>:304:16)
-        at UtilityScript.<anonymous> (<anonymous>:1:44)
-        at eval (eval at evaluate (:302:30), <anonymous>:2:34)
-        at UtilityScript.evaluate (<anonymous>:304:16)
-        at UtilityScript.<anonymous> (<anonymous>:1:44)
-        at /Users/milkeon/Desktop/AntiProj/createGame/tests/game.spec.js:54:16
-
-    Error Context: test-results/tests-game-인피니티-스텝-3K---분기-6270d-데이터-검증-동일-높이에-두-개의-계단-존재-확인/error-context.md
-
-  2 failed
-    tests/game.spec.js:9:7 › 인피니티 스텝 3K - 분기 시스템(Branching) 검증 › 장거리 생존 테스트: 1,000계단 돌파 및 분기 로직 검증 ─
-    tests/game.spec.js:50:7 › 인피니티 스텝 3K - 분기 시스템(Branching) 검증 › 분기 데이터 검증: 동일 높이에 두 개의 계단 존재 확인 ──
+  1 failed
+    tests/game_logic.spec.js:58:9 › Infinity Stairs 3K Enhanced Logic Tests › 물리 엔진: 하드모드 30계단 주기(100, 130, 160...) 분기/합류 확인 
+  4 passed (6.9s)
