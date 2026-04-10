@@ -131,9 +131,13 @@ function renderGames() {
         grid.classList.remove('edit-mode');
     }
 
-    games.forEach(game => {
+    games.forEach((game, index) => {
         const card = document.createElement('div');
         card.className = 'game-card';
+        if (index === 0) {
+            card.classList.add('latest-game');
+        }
+        
         card.onclick = () => {
             if (isEditMode) {
                 openEditModal(game);
@@ -147,6 +151,7 @@ function renderGames() {
         if (thumbUrl.includes('game.png')) thumbUrl = DEFAULT_THUMB;
 
         card.innerHTML = `
+            ${index === 0 ? '<div class="new-badge">NEW</div>' : ''}
             ${isEditMode ? `<button class="delete-card-btn" onclick="event.stopPropagation(); window.deleteGame('${game.id}', '${game.title}')">×</button>` : ''}
             <div class="thumb-container">
                 <img src="${thumbUrl}" alt="${game.title}" onerror="this.src='${DEFAULT_THUMB}'">
