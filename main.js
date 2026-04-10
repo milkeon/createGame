@@ -407,10 +407,8 @@ class GameInstance {
     getColRange(level) {
         if (playerCount >= 3) return { min: 4, max: 6 };
         if (playerCount === 2) {
-            // 지적 사항: 2인용 범위 확장 속도 상향 (레벨 10부터 5칸)
-            let min = 4, max = 6;
-            if (level >= 10) { min = 3; max = 7; } 
-            return { min, max };
+            // 지적 사항: 2인용 범위 확장 (시작부터 5칸 전체 활용)
+            return { min: 3, max: 7 };
         }
 
         let min = 2, max = 8;
@@ -714,7 +712,8 @@ document.getElementById('study-toggle-btn')?.addEventListener('click', () => {
 window.setPlayerAndStart = function (count, mode = 'normal') {
     playerCount = count;
     currentGameMode = mode;
-    instances = [];
+    instances = []; 
+    window.instances = instances; // 참조 갱신
     for (let i = 0; i < count; i++) {
         instances.push(new GameInstance(i, mode === 'hard'));
     }
@@ -941,6 +940,16 @@ window.submitRecord = function (mode, score) {
 
 // [New] 랭킹 보드 렌더링
 function renderLeaderboards() {
+    updateGlobalLeaderboard();
+    updateLocalLeaderboard();
+}
+
+// 테스트를 위해 내부 변수 노출
+window.instances = instances;
+window.showLearningContent = showLearningContent;
+window.currentGameMode = currentGameMode;
+
+function updateLocalLeaderboard() {
     const globalBoard = document.getElementById('global-leaderboard');
     const localBoard = document.getElementById('local-best-board');
     if (!globalBoard || !localBoard) return;
