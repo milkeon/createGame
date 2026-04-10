@@ -69,6 +69,8 @@ let lastTimestamp = 0;
 let instances = [];
 let playerCount = 1;
 let isPaused = false;
+let showLearningContent = true;
+let currentGameMode = 'normal';
 
 // [New] 글로벌 및 로컬 랭킹 상태 관리
 let globalRankings = { "1P": [], "2P": [], "3P": [] };
@@ -177,7 +179,7 @@ function loadLocalBest() {
 async function saveRecord(mode, score, name) {
     if (score <= 0) return;
     if (mode === '3P') return; // 3인용은 저장하지 않음
-    
+
     // 로컬 업데이트
     if (score > (localBest[mode] ? localBest[mode].score : 0)) {
         localBest[mode] = { score, name };
@@ -234,8 +236,9 @@ function renderLandingLearningList() {
 }
 
 class GameInstance {
-    constructor(id) {
-        this.id = id;
+    constructor(index, isHardMode = false) {
+        this.index = index;
+        this.isHardMode = isHardMode;
         this.reset();
     }
 
@@ -252,6 +255,9 @@ class GameInstance {
         this.fallState = { vx: 0, vy: 0, worldX: 0, worldY: 0, rotation: 0, scale: 1, startTime: 0 };
         this.respawnTimer = 0;
         this.blinkTimer = 0;
+
+        this.isBranched = false;
+        this.stepsSinceBranch = 0;
 
         // 1인용 전용 학습 모드 초기화
         if (playerCount === 1) this.initLearning();
@@ -332,14 +338,19 @@ class GameInstance {
     }
 
     generateStair() {
-        const lastStair = this.stairs[this.stairs.length - 1];
-        const nextY = lastStair.y + STAIR_HEIGHT_STEP;
+        const maxY = Math.max(...this.stairs.map(s => s.y));
+        const lastStairs = this.stairs.filter(s => s.y === maxY);
+        const nextY = maxY + STAIR_HEIGHT_STEP;
         const level = Math.round(nextY / STAIR_HEIGHT_STEP);
-        const range = this.getColRange(level);
-        let nextCol = lastStair.col + (Math.random() > 0.5 ? 1 : -1);
-        if (nextCol < range.min) nextCol = range.min + 1;
-        if (nextCol > range.max) nextCol = range.max - 1;
-        if (nextCol === lastStair.col) nextCol = lastStair.col + (lastStair.col <= range.min ? 1 : -1);
+
+        // 하드모드 분기 관리 (100계단 이후 30계단 주기)
+        if (playerCount === 1 && this.isHardMode && level >= 100) {
+            this.stepsSinceBranch++;
+            if (this.stepsSinceBranch >= 30) {
+                this.isBranched = !this.isBranched;
+                this.stepsSinceBranch = 0;
+            }
+        }
 
         // 계단에 알파벳 심기 (1인용 전용)
         let stairChar = '';
@@ -350,12 +361,57 @@ class GameInstance {
             }
         }
 
-        this.stairs.push({ col: nextCol, y: nextY, char: stairChar });
+        const range = this.getColRange(level);
+
+        // 분기 로직: 갈라지는 중
+        if (this.isBranched && lastStairs.length === 1) {
+            const s = lastStairs[0];
+            const leftCol = s.col - 1;
+            const rightCol = s.col + 1;
+            
+            if (leftCol >= range.min && rightCol <= range.max) {
+                this.stairs.push({ col: leftCol, y: nextY, char: stairChar });
+                this.stairs.push({ col: rightCol, y: nextY, char: stairChar });
+            } else {
+                let nc = s.col + (s.col <= range.min ? 1 : -1);
+                this.stairs.push({ col: nc, y: nextY, char: stairChar });
+                this.isBranched = false;
+            }
+        } 
+        // 합류 로직: 갈라져 있다가 하나로 합쳐지는 직전 단계
+        else if (!this.isBranched && lastStairs.length > 1) {
+            const s1 = lastStairs[0];
+            const s2 = lastStairs[1];
+            const midCol = Math.round((s1.col + s2.col) / 2);
+            this.stairs.push({ col: midCol, y: nextY, char: stairChar });
+        } 
+        // 분기 유지 로직: 계속 두 갈래 상태 유지
+        else if (this.isBranched && lastStairs.length > 1) {
+            lastStairs.forEach(s => {
+                let nc = s.col + (Math.random() > 0.5 ? 1 : -1);
+                if (nc < range.min) nc = s.col + 1;
+                if (nc > range.max) nc = s.col - 1;
+                this.stairs.push({ col: nc, y: nextY, char: stairChar });
+            });
+        } 
+        // 기본 로직 (Normal 또는 합쳐진 상태)
+        else {
+            const lastStair = lastStairs[0];
+            let nextCol = lastStair.col + (Math.random() > 0.5 ? 1 : -1);
+            if (nextCol <= range.min) nextCol = lastStair.col + 1;
+            else if (nextCol >= range.max) nextCol = lastStair.col - 1;
+            this.stairs.push({ col: nextCol, y: nextY, char: stairChar });
+        }
     }
 
     getColRange(level) {
         if (playerCount >= 3) return { min: 4, max: 6 };
-        if (playerCount === 2) return { min: 3, max: 7 };
+        if (playerCount === 2) {
+            // 지적 사항: 2인용 범위 확장 속도 상향 (레벨 10부터 5칸)
+            let min = 4, max = 6;
+            if (level >= 10) { min = 3; max = 7; } 
+            return { min, max };
+        }
 
         let min = 2, max = 8;
         let extra = Math.floor(level / 15);
@@ -606,7 +662,7 @@ function init() {
     const panel = document.getElementById('learning-info');
     if (panel) panel.classList.remove('hidden'); // 초기 상태에서도 내용이 보이도록 히든 제거
     renderLandingLearningList(); // 초기 리스트 렌더링 (회색)
-    
+
     // [New] 랭킹 데이터 초기화
     loadLocalBest();
     fetchGlobalRankings();
@@ -614,10 +670,54 @@ function init() {
     requestAnimationFrame(gameLoop);
 }
 
-window.setPlayerAndStart = function (count) {
+window.showModeSelect = function() {
+    const landing = document.getElementById('landing-menu');
+    const modeSelect = document.getElementById('mode-select-menu');
+    if (landing && modeSelect) {
+        landing.style.display = 'none';
+        modeSelect.style.display = 'block';
+    }
+};
+
+window.backToMainMenu = function() {
+    const landing = document.getElementById('landing-menu');
+    const modeSelect = document.getElementById('mode-select-menu');
+    if (landing && modeSelect) {
+        landing.style.display = 'block';
+        modeSelect.style.display = 'none';
+    }
+};
+
+function updateStudyContentVisibility() {
+    const btn = document.getElementById('study-toggle-btn');
+    if (showLearningContent) {
+        document.body.classList.remove('hide-learning');
+        if (btn) {
+            btn.innerText = '공부 중 (F3)';
+            btn.classList.remove('active');
+        }
+    } else {
+        document.body.classList.add('hide-learning');
+        if (btn) {
+            btn.innerText = '공부 안함 (F3)';
+            btn.classList.add('active');
+        }
+    }
+}
+
+// F3 버튼 리스너
+document.getElementById('study-toggle-btn')?.addEventListener('click', () => {
+    showLearningContent = !showLearningContent;
+    updateStudyContentVisibility();
+});
+
+window.setPlayerAndStart = function (count, mode = 'normal') {
     playerCount = count;
+    currentGameMode = mode;
     instances = [];
-    for (let i = 0; i < count; i++) instances.push(new GameInstance(i));
+    for (let i = 0; i < count; i++) {
+        instances.push(new GameInstance(i, mode === 'hard'));
+    }
 
     uiOverlay.className = count === 3 ? 'three-player' : (count === 2 ? 'two-player' : 'single-player');
     document.getElementById('p2-ui').classList.toggle('hidden', count < 2);
@@ -642,12 +742,21 @@ window.setPlayerAndStart = function (count) {
         }
     }
 
+    updateStudyContentVisibility();
+
     instances.forEach(inst => { inst.reset(); inst.gameState = 'PLAYING'; });
     isPaused = false;
     pauseOverlay.classList.add('hidden');
 };
 
 function handleKeyDown(e) {
+    if (e.key === 'F3') {
+        e.preventDefault();
+        showLearningContent = !showLearningContent;
+        updateStudyContentVisibility();
+        return;
+    }
+
     if (e.code === 'F2') {
         e.preventDefault();
         toggleLearningPanel();
@@ -671,7 +780,7 @@ function handleKeyDown(e) {
     if (menuOverlay.classList.contains('visible')) {
         const nameModal = document.getElementById('name-input-modal');
         const isModalOpen = nameModal && !nameModal.classList.contains('hidden');
-        
+
         if (!isModalOpen) {
             if (e.key === '1') setPlayerAndStart(1);
             if (e.key === '2') setPlayerAndStart(2);
@@ -802,9 +911,9 @@ function showHighScoreInput(mode, score) {
     // 이벤트 리스너 재설정 (클론 사용으로 중복 방지)
     const newSaveBtn = saveBtn.cloneNode(true);
     saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
-    
+
     newSaveBtn.onclick = () => submitRecord(mode, score);
-    
+
     // 포커스 강제 (사용자 규칙: 인풋 있으면 항상 기본으로 커서가 잡히게)
     setTimeout(() => {
         input.focus();
@@ -814,12 +923,12 @@ function showHighScoreInput(mode, score) {
     }, 100);
 }
 
-window.hideNameModal = function() {
+window.hideNameModal = function () {
     const modal = document.getElementById('name-input-modal');
     if (modal) modal.classList.add('hidden');
 };
 
-window.submitRecord = function(mode, score) {
+window.submitRecord = function (mode, score) {
     const input = document.getElementById('player-name-input');
     const name = input ? input.value.trim() : "";
     if (!name) {
@@ -848,7 +957,7 @@ function renderLeaderboards() {
                 const displayName = res.playerName || res.name || 'Anonymous';
                 globalHtml += `
                     <div class="rank-item">
-                        <span class="n">${i + 1}</span>
+                        <span class="n">${i + 1}등</span>
                         <span class="nm">${displayName}</span>
                         <span class="s">${res.score}</span>
                     </div>
