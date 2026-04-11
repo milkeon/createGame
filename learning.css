@@ -78,7 +78,8 @@
 }
 
 .toggle-arrow {
-    font-size: 1.8rem; /* 크기 키움 */
+    font-size: 1.8rem;
+    /* 크기 키움 */
     color: var(--neon-cyan);
     text-shadow: 0 0 15px rgba(0, 243, 255, 0.8);
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -162,8 +163,8 @@
     gap: 12px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* 다중 레이어 글로우 효과 */
-    box-shadow: 
-        0 0 10px rgba(0, 243, 255, 0.2), 
+    box-shadow:
+        0 0 10px rgba(0, 243, 255, 0.2),
         0 0 25px rgba(0, 243, 255, 0.15),
         inset 0 0 15px rgba(0, 243, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -173,8 +174,8 @@
     transform: translateX(8px) scale(1.03);
     border-color: rgba(0, 243, 255, 0.6);
     background: rgba(40, 40, 50, 0.8);
-    box-shadow: 
-        0 0 20px rgba(0, 243, 255, 0.4), 
+    box-shadow:
+        0 0 20px rgba(0, 243, 255, 0.4),
         0 0 50px rgba(0, 243, 255, 0.3),
         inset 0 0 20px rgba(0, 243, 255, 0.2);
 }
@@ -183,16 +184,16 @@
     background: rgba(35, 30, 0, 0.6);
     border-color: rgba(255, 214, 0, 0.3);
     border-left-color: #ffd600;
-    box-shadow: 
-        0 0 10px rgba(255, 214, 0, 0.2), 
+    box-shadow:
+        0 0 10px rgba(255, 214, 0, 0.2),
         0 0 25px rgba(255, 214, 0, 0.15),
         inset 0 0 15px rgba(255, 214, 0, 0.1);
 }
 
 .learning-card.completed:hover {
     border-color: rgba(255, 214, 0, 0.6);
-    box-shadow: 
-        0 0 20px rgba(255, 214, 0, 0.4), 
+    box-shadow:
+        0 0 20px rgba(255, 214, 0, 0.4),
         0 0 50px rgba(255, 214, 0, 0.3),
         inset 0 0 20px rgba(255, 214, 0, 0.2);
 }
@@ -201,7 +202,8 @@
 .learning-card.landing-item {
     background: rgba(30, 30, 35, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 4px solid #666; /* 채도 낮은 회색 */
+    border-left: 4px solid #666;
+    /* 채도 낮은 회색 */
     opacity: 0.9;
 }
 
