@@ -1,3 +1,6 @@
+지금 바로 플레이!!
+https://create-game-kosta.vercel.app/
+
 # 🕹️ HTML5 기술 보고서: GAME UNIVERSE 엔진 분석
 
 > **본 문서는 GAME UNIVERSE 플랫폼과 Infinity Blocks 게임의 설계 아키텍처 및 핵심 알고리즘에 대한 기술적 분석을 담고 있습니다.**
