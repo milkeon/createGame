@@ -173,6 +173,7 @@ class GameInstance {
         this.fallState = { vx: 0, vy: 0, worldX: 0, worldY: 0, rotation: 0, scale: 1, startTime: 0 };
         this.respawnTimer = 0;
         this.blinkTimer = 0;
+        this.floatingTexts = []; // 잔상 텍스트 관리용
 
         // 1인용 전용 학습 모드 초기화
         if (playerCount === 1) this.initLearning();
@@ -327,6 +328,29 @@ class GameInstance {
 
         this.generateStair();
         this.createShockwave(this.player.col, this.player.y);
+        this.addResidualText(); // 잔상 효과 추가
+    }
+
+    addResidualText() {
+        if (playerCount !== 1 || !this.targetSnippet) return;
+        
+        // 현재 타겟 스니펫 중 일부 또는 전체를 배경 잔상으로 추가
+        const text = this.targetSnippet;
+        const x = (Math.random() * (CANVAS_WIDTH / playerCount));
+        const y = this.player.y + (Math.random() * 400 - 200);
+        const color = getThemeColor(this.score);
+
+        this.floatingTexts.push({
+            text: text,
+            x: x,
+            y: y,
+            color: color,
+            alpha: 0.12, // 은은한 잔상
+            life: 1.0,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: -0.2 - Math.random() * 0.3,
+            fontSize: 18 + Math.random() * 12
+        });
     }
 
     handleConceptCompletion() {
@@ -423,6 +447,15 @@ class GameInstance {
             sw.life -= sw.decay;
             if (sw.life <= 0) this.shockwaves.splice(i, 1);
         }
+
+        // 잔상 텍스트 업데이트
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+            const ft = this.floatingTexts[i];
+            ft.x += ft.vx;
+            ft.y += ft.vy;
+            ft.life -= 0.004;
+            if (ft.life <= 0) this.floatingTexts.splice(i, 1);
+        }
     }
 
     finish() {
@@ -447,9 +480,21 @@ class GameInstance {
         ctx.clip();
 
         // 중앙 정렬 로직 수정: 화면을 플레이어 위치에 따라 움직이지 않고, 그리드를 중앙에 고정
-        // 월드 좌표의 중심 컬럼(5번)을 뷰포트의 중앙에 위치시킴
         const centerXOffset = xOffset + vWidth / 2 - (5 * COLUMN_WIDTH + STAIR_SIZE / 2);
         const currentThemeColor = getThemeColor(this.score);
+
+        // 배경 잔상 텍스트 그리기 (무의식적 학습 레이어)
+        this.floatingTexts.forEach(ft => {
+            ctx.save();
+            ctx.globalAlpha = ft.life * ft.alpha;
+            ctx.fillStyle = ft.color;
+            ctx.font = `italic 600 ${ft.fontSize}px "Outfit"`;
+            ctx.textAlign = 'center';
+            const drawX = xOffset + (ft.x % vWidth);
+            const drawY = CANVAS_HEIGHT - START_Y_OFFSET - (ft.y - this.cameraY);
+            ctx.fillText(ft.text, drawX, drawY);
+            ctx.restore();
+        });
 
         // 계단 그리기
         const nextY = (this.score + 1) * STAIR_HEIGHT_STEP;
