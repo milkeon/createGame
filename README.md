@@ -1,101 +1,77 @@
-# 🕹️ HTML5 기반 미니 게임 플랫폼: GAME UNIVERSE
+# 🕹️ HTML5 기술 보고서: GAME UNIVERSE 엔진 분석
 
-> **HTML5의 강력한 API를 활용하여 구축된 미니멀한 아케이드 게임 플랫폼입니다.**  
-> 본 프로젝트는 브라우저 네이티브 기술만으로 풍부한 게임 경험을 제공하는 것을 목표로 합니다.
-
----
-
-## 📅 프로젝트 정보
-- **개발 기간**: 2026.04 (진행 중)
-- **개발 인원**: 1인 프로젝트
-- **주요 목표**: HTML5 Canvas 및 Web Storage API의 심층 이해와 실시간 게임 엔진 구현.
+> **본 문서는 GAME UNIVERSE 플랫폼과 Infinity Blocks 게임의 설계 아키텍처 및 핵심 알고리즘에 대한 기술적 분석을 담고 있습니다.**
 
 ---
 
-## 🛠️ 기술 스택 (The Hero: HTML5)
+## 🏗️ 플랫폼 아키텍처 (Platform Architecture)
 
-이번 프로젝트는 **HTML5**를 핵심 기술로 설정하고, 별도의 무거운 라이브러리 없이 브라우저 API 본연의 기능을 극대화하는 데 초점을 맞췄습니다.
-
-- **Storage**: HTML5 LocalStorage API (기록 관리)
-- **Graphics**: HTML5 Canvas 2D API (게임 렌더링)
-- **Engine**: JavaScript `requestAnimationFrame` (60FPS 루프)
-- **Infrastructure**: **Vercel Edge Network** (빠른 배포 및 글로벌 딜레이 감소)
-- **Backend**: Firebase Firestore (실시간 리더보드 동기화)
+### 1. 실시간 데이터 동기화 및 썸네일 프로세싱
+플랫폼 코어(`platform.js`)는 Firebase Firestore와 Storage를 결합하여 데이터의 실시간성과 영속성을 보장합니다.
+- **CORS 및 성능 최적화**: 외부 이미지 URL 사용 시 발생하는 보안 정책 및 용량 문제를 해결하기 위해, 브라우저 내 **Canvas API**를 활용한 클라이언트 사이드 리사이징 및 JPEG 압축(0.7 Quality) 후 Base64로 인코딩하여 저장합니다.
+- **Real-time Pub/Sub**: `onSnapshot` 리스너를 통해 게임 라이브러리의 상태 변화를 감지하고, 비동기적으로 UI Grid를 재렌더링하여 데이터 일치성을 유지합니다.
 
 ---
 
-## 🎮 주요 기능 (Main Features)
+## 🎮 핵심 게임 엔진 분석: Infinity Blocks
 
-### 1. Game Universe (Simple Platform)
-- 직관적인 카드 기반의 게임 진입로 제공 및 Vercel 상시 배포 환경 구성.
-- 플랫폼 내 게임 추가/삭제/수정을 지원하는 동적 DOM 제어 시스템.
-
-### 2. Infinity Blocks (Primary Game)
-- **Residual Image Learning**: 게임 배경에 파이썬 코드 스니펫이 잔상처럼 노출되어 무의식적인 학습을 유도하는 시스템.
-- **Dynamic Generation**: 플레이어의 진행에 맞춰 실시간으로 계단을 생성하는 절차적 알고리즘.
-- **Multiplayer Support**: 한 화면에서 최대 3인까지 동시 플레이 가능한 뷰포트 분할 시스템.
-
----
-
-## 💡 핵심 기술 구현 (Technical Implementation)
-
-### 🛠️ 1. 무의식적 잔상 학습 시스템 (Subliminal Learning)
-플레이어가 게임 조작(Flow 상태)에 집중하는 동안, 뇌의 시각적 인지 영역에 코드가 자연스럽게 스며들도록 하는 **잔상 효과 알고리즘**을 구현했습니다.
-- **구현 방식**: `FloatingText` 클래스를 통해 캐릭터가 점프할 때마다 현재 학습 문장을 낮은 Alpha값(0.1)으로 배경 레이어에 동적으로 배치.
-- **효과**: 반복적인 시각적 노출을 통해 코딩 문법에 대한 거부감을 낮추고 암기 효율을 극대화.
-
-### 🛠️ 2. 고성능 Canvas 렌더링 엔진
-`requestAnimationFrame`을 활용하여 CPU 부하를 최소화하면서도 부드러운 60FPS를 유지하는 게임 루프를 구축했습니다.
+### 1. 절차적 계단 생성 알고리즘 (Procedural Stair Generation)
+무한히 이어지는 게임 세계를 구현하기 위해 **결정론적 랜덤(Deterministic Random)** 로직을 기반으로 계단을 생성합니다.
 
 ```javascript
-// 시각적인 화려함을 위한 Canvas 효과 구현 (main.js)
-drawStair(ctx, x, y, size, isNext, themeColor) {
-    ctx.save();
-    ctx.shadowBlur = isNext ? 30 : 10; // HTML5 Shadow API 활용
-    ctx.shadowColor = isNext ? themeColor : 'rgba(255,255,255,0.1)';
-    ctx.beginPath();
-    ctx.roundRect(x, y, size, size, 20); // 최신 roundRect API 적용
-    ctx.fill();
-    ctx.restore();
+// 레벨에 따른 가동 범위 계산 로직 (main.js)
+getColRange(level) {
+    if (playerCount >= 3) return { min: 4, max: 6 }; // 멀티플레이 난이도 고정
+    let min = 2, max = 8;
+    let extra = Math.floor(level / 15); // 15단계마다 가동 범위 확장
+    for (let i = 1; i <= extra; i++) {
+        if (i % 2 === 1) max = Math.min(10, max + 1);
+        else min = Math.max(0, min - 1);
+    }
+    return { min, max };
 }
 ```
+- **난이도 설계**: 점수가 높아질수록 `getColRange`가 반환하는 범위가 넓어지며, 이는 플레이어의 시각적 탐색 비용을 증가시켜 자연스러운 난이도 상승을 유도합니다.
 
-### 🛠️ 3. Vercel 및 Edge 인프라 도입
-전통적인 서버 환경 대신 **Vercel**을 선택하여 정적 리소스 로딩 속도를 최적화했습니다.
-- `vercel.json` 설정을 통한 리다이렉션 및 보안 헤더 구성.
-- 지속적 통합/배포(CI/CD) 환경 구축으로 코드 수정 시 즉시 서비스 반영.
+### 2. 무의식적 잔상 학습 엔진 (Subliminal Learning Engine)
+플레이어의 몰입(Flow)을 방해하지 않으면서 교육적 효과를 극대화하기 위해 **Alpha Blending** 기반의 시각 시스템을 도입했습니다.
 
----
+- **FloatingText 클래스**: 각 텍스트 객체는 독립적인 가속도(`vx`, `vy`)와 생명주기를 가집니다.
+- **인지 부하 제어**: 텍스트의 불투명도를 `0.05~0.1` 사이로 제한하여 시각적 노이즈를 최소화하고, 점프 이펙트 시점에만 간헐적으로 노출하여 '무의식적 각인'을 유도합니다.
 
-## 🔧 설치 및 실행 (Getting Started)
+### 3. 고성능 Canvas 렌더링 파이프라인
+안정적인 60FPS 환경을 위해 캔버스 렌더링 과정을 계층화(Layering)하여 관리합니다.
 
-1. **저장소 클론**
-   ```bash
-   git clone https://github.com/milkeon/createGame.git
-   ```
-
-2. **Vercel을 통한 빠른 배포**
-   ```bash
-   npm i -g vercel
-   vercel --prod
-   ```
+1. **Background Layer**: 은은하게 흐르는 잔상 텍스트가 먼저 그려집니다 (`globalAlpha` 제어).
+2. **Dynamic World Layer**: 플레이어 위치에 따른 카메라 트래킹(`cameraY`)이 적용된 계단 객체들이 렌더링됩니다.
+3. **Player & FX Layer**: 점프 애니메이션의 이징(Easing) 수식과 `shockwaves` 이펙트가 최단 시간 프레임 내에 처리됩니다.
 
 ---
 
-## 📝 트러블슈팅 (Troubleshooting)
+## 💡 주요 기술 구현 상세
 
-### ⚠️ Issue: 캔버스 렌더링 시 발생하는 잔상 및 성능 저하
-- **현상**: 계단이 빠르게 올라갈 때 이전 프레임의 궤적이 남거나 메모리 점유율이 점차 상승함.
-- **분석**: `ctx.clearRect()` 호출 시 전역 영역 계산 오류 및 무분별한 `beginPath()` 미종료가 원인으로 파악됨.
-- **해결**: 
-    1. 렌더링 루프 시작 시 `clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)`를 명확히 선언.
-    2. `ctx.save()`와 `ctx.restore()`를 활용해 캔버스 상태 스택을 엄격히 관리하여 성능을 40% 향상시킴.
+### 🛠️ 프레임 기반 애니메이션 및 동기화
+`requestAnimationFrame` 루프 내에서 가변적인 `deltaTime`을 계산하여, 기기 사양에 관계없이 일관된 게임 속도를 유지합니다.
+- **Jump Easing**: 단순한 직선 이동이 아닌, `Math.pow` 기반의 완화 함수를 적용하여 포물선 점프의 물리적 느낌을 재현합니다.
+- **Time Gauge Logic**: 점수가 올라갈수록 시간 감소율(`TIME_DECREASE_RATE`)이 선형적으로 증가하도록 설계하여 하이 레벨에서의 긴장감을 고조시킵니다.
 
-### ⚠️ Issue: 반응형 환경에서의 캔버스 좌표 불일치
-- **현상**: 브라우저 창 크기 변경 시 마우스 클릭 좌표와 실제 게임 블록 위치가 어긋남.
-- **분석**: CSS를 통한 캔버스 크기 조작과 실제 내부 해상도(`canvas.width/height`)의 불일치 발생.
-- **해결**: 실제 연산은 고정 해상도(`1800x1000`)에서 수행하고, 디스플레이는 CSS `aspect-ratio`를 사용하여 비율을 유지한 뒤, 캔버스 비율에 따른 좌표 보정 로직을 추가하여 해결.
+### 🛠️ 데이터 지속성 전략 (Hybrid Persistence)
+데이터의 특성에 따라 서로 다른 저장 기술을 선택적으로 적용합니다.
+- **LocalStorage**: 최고 기록(`bestScore`) 및 학습 진척도와 같이 즉각적인 접근이 필요한 개인화 데이터 관리.
+- **Firebase Firestore**: 전역 랭킹 및 대결 기록과 같이 데이터 무결성이 중요한 데이터의 원격 저장 및 공유.
 
 ---
 
-© 2026 GAME UNIVERSE Project. Built with ❤️ by Milkeon.
+## 📝 기술적 문제 해결 (Troubleshooting Case)
+
+### ⚠️ 반응형 캔버스 좌표 동기화 이슈
+- **문제**: 브라우저 리사이징 시 CSS 레이아웃 변경으로 인해 마우스/터치 좌표와 캔버스 내부 논리 좌표 간의 불일치 발생.
+- **해결**: `getBoundingClientRect()`를 통해 캔버스의 실제 렌더링 크기를 구한 뒤, 고정 논리 해상도(`1800x1000`)에 대한 배율을 계산하여 좌표를 실시간 보정하는 매핑 함수를 구축하여 해결했습니다.
+
+### ⚠️ 이미지 업로드 시 CORS 및 메모리 누수
+- **문제**: 외부 URL 사용 시 캔버스 오염(Tainted Canvas) 문제로 인한 이미지 처리 불가 현상.
+- **해결**: 이미지 로딩 전 `crossOrigin = "Anonymous"` 설정을 선행하고, 리사이징 처리 직후 메모리 점유를 해제하기 위해 `FileReader`와 임시 캔버스 객체를 명시적으로 가비지 컬렉팅하여 성능을 최적화했습니다.
+
+---
+
+© 2026 GAME UNIVERSE Project.
