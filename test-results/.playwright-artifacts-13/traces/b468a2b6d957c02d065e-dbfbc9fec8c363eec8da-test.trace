@@ -1,0 +1,53 @@
+{"version":8,"type":"context-options","origin":"testRunner","browserName":"","playwrightVersion":"1.59.1","options":{},"platform":"win32","wallTime":1776043885614,"monotonicTime":789977.246,"sdkLanguage":"javascript"}
+{"type":"before","callId":"hook@1","stepId":"hook@1","startTime":789985.313,"class":"Test","method":"hook","title":"Before Hooks","params":{},"stack":[]}
+{"type":"before","callId":"hook@2","stepId":"hook@2","parentId":"hook@1","startTime":789986.602,"class":"Test","method":"hook","title":"beforeEach hook","params":{},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":4,"column":10}]}
+{"type":"before","callId":"fixture@28","stepId":"fixture@28","parentId":"hook@2","startTime":790017.117,"class":"Test","method":"fixture","title":"Fixture \"browser\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@29","stepId":"pw:api@29","parentId":"fixture@28","startTime":790029.264,"class":"Test","method":"pw:api","title":"Launch browser","params":{"handleSIGINT":"false","tracesDir":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\test-results\\.playwright-artifacts-13\\traces","artifactsDir":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\test-results\\.playwright-artifacts-13","headless":"true","ignoreDefaultArgs":"undefined","ignoreAllDefaultArgs":"false","env":"undefined","timeout":"180000"},"stack":[]}
+{"type":"after","callId":"pw:api@29","endTime":790299.47,"annotations":[]}
+{"type":"after","callId":"fixture@28","endTime":790299.856,"annotations":[]}
+{"type":"before","callId":"fixture@32","stepId":"fixture@32","parentId":"hook@2","startTime":790302.999,"class":"Test","method":"fixture","title":"Fixture \"context\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@33","stepId":"pw:api@33","parentId":"fixture@32","startTime":790308.327,"class":"Test","method":"pw:api","title":"Create context","params":{"selectorEngines":"[]","testIdAttributeName":"data-testid","acceptDownloads":"accept","bypassCSP":"false","colorScheme":"light","deviceScaleFactor":"1","hasTouch":"false","ignoreHTTPSErrors":"false","isMobile":"false","javaScriptEnabled":"true","locale":"en-US","offline":"false","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36","viewport":"Object","baseURL":"http://localhost:5173","serviceWorkers":"allow","noDefaultViewport":"false","extraHTTPHeaders":"undefined","storageState":"undefined","reducedMotion":"undefined","forcedColors":"undefined","contrast":"undefined","clientCertificates":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@33","endTime":790336.097,"annotations":[]}
+{"type":"after","callId":"fixture@32","endTime":790345.512,"annotations":[]}
+{"type":"before","callId":"fixture@34","stepId":"fixture@34","parentId":"hook@2","startTime":790346.28,"class":"Test","method":"fixture","title":"Fixture \"page\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@35","stepId":"pw:api@35","parentId":"fixture@34","startTime":790350.594,"class":"Test","method":"pw:api","title":"Create page","params":{},"stack":[]}
+{"type":"after","callId":"pw:api@35","endTime":790823.411,"annotations":[]}
+{"type":"after","callId":"fixture@34","endTime":790823.672,"annotations":[]}
+{"type":"before","callId":"pw:api@36","stepId":"pw:api@36","parentId":"hook@2","startTime":790829.77,"class":"Test","method":"pw:api","title":"Navigate to \"/game.html\"","params":{"url":"/game.html","waitUntil":"load","timeout":"0"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":11,"column":20}]}
+{"type":"stdout","timestamp":792536.325,"text":"BROWSER LOG: ✔ Firebase initialized successfully\n"}
+{"type":"stdout","timestamp":792549.511,"text":"BROWSER LOG: Autoplay blocked. Waiting for user interaction.\n"}
+{"type":"after","callId":"pw:api@36","endTime":795065.671,"annotations":[]}
+{"type":"before","callId":"pw:api@37","stepId":"pw:api@37","parentId":"hook@2","startTime":795068.137,"class":"Test","method":"pw:api","title":"Wait for function","params":{"pollingInterval":"undefined","expression":"() => typeof window.setPlayerAndStart === 'function'","isFunction":"true","arg":"Object","timeout":"0"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":12,"column":20}]}
+{"type":"after","callId":"pw:api@37","endTime":795118.578,"annotations":[]}
+{"type":"before","callId":"pw:api@38","stepId":"pw:api@38","parentId":"hook@2","startTime":795120.283,"class":"Test","method":"pw:api","title":"Wait for timeout","params":{"waitTimeout":"1000"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":13,"column":20}]}
+{"type":"after","callId":"pw:api@38","endTime":796245.685,"annotations":[]}
+{"type":"after","callId":"hook@2","endTime":796245.93,"annotations":[]}
+{"type":"after","callId":"hook@1","endTime":796246.564,"annotations":[]}
+{"type":"before","callId":"expect@39","stepId":"expect@39","startTime":796257.313,"class":"Test","method":"expect","title":"Expect \"toBeVisible\"","params":{},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":19,"column":32}]}
+{"type":"after","callId":"expect@39","endTime":796321.729,"annotations":[]}
+{"type":"before","callId":"pw:api@40","stepId":"pw:api@40","startTime":796326.818,"class":"Test","method":"pw:api","title":"Click locator('#start-button-1p')","params":{"selector":"#start-button-1p","timeout":"0"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":20,"column":20}]}
+{"type":"after","callId":"pw:api@40","endTime":797065.781,"annotations":[]}
+{"type":"before","callId":"expect@41","stepId":"expect@41","startTime":797068.299,"class":"Test","method":"expect","title":"Expect \"toBeVisible\"","params":{},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":21,"column":38}]}
+{"type":"after","callId":"expect@41","endTime":797109.782,"annotations":[]}
+{"type":"before","callId":"hook@42","stepId":"hook@42","startTime":797110.753,"class":"Test","method":"hook","title":"After Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@43","stepId":"fixture@43","parentId":"hook@42","startTime":797112.9,"class":"Test","method":"fixture","title":"Fixture \"page\"","params":{},"stack":[]}
+{"type":"after","callId":"fixture@43","endTime":797113.204,"annotations":[]}
+{"type":"before","callId":"fixture@44","stepId":"fixture@44","parentId":"hook@42","startTime":797114.789,"class":"Test","method":"fixture","title":"Fixture \"context\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@45","stepId":"pw:api@45","parentId":"fixture@44","startTime":798354.304,"class":"Test","method":"pw:api","title":"Close context","params":{"reason":"Test ended."},"stack":[]}
+{"type":"after","callId":"pw:api@45","endTime":798488.416,"annotations":[]}
+{"type":"after","callId":"fixture@44","endTime":798488.815,"annotations":[]}
+{"type":"before","callId":"fixture@50","stepId":"fixture@50","parentId":"hook@42","startTime":798492.117,"class":"Test","method":"fixture","title":"Fixture \"baseURL\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@50","endTime":798492.188,"annotations":[]}
+{"type":"before","callId":"fixture@51","stepId":"fixture@51","parentId":"hook@42","startTime":798493.086,"class":"Test","method":"fixture","title":"Fixture \"userAgent\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@51","endTime":798493.277,"annotations":[]}
+{"type":"before","callId":"fixture@53","stepId":"fixture@53","parentId":"hook@42","startTime":798495.496,"class":"Test","method":"fixture","title":"Fixture \"viewport\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@53","endTime":798495.633,"annotations":[]}
+{"type":"before","callId":"fixture@60","stepId":"fixture@60","parentId":"hook@42","startTime":798498.428,"class":"Test","method":"fixture","title":"Fixture \"isMobile\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@60","endTime":798498.701,"annotations":[]}
+{"type":"before","callId":"fixture@64","stepId":"fixture@64","parentId":"hook@42","startTime":798501.428,"class":"Test","method":"fixture","title":"Fixture \"hasTouch\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@64","endTime":798501.578,"annotations":[]}
+{"type":"before","callId":"fixture@66","stepId":"fixture@66","parentId":"hook@42","startTime":798502.81,"class":"Test","method":"fixture","title":"Fixture \"deviceScaleFactor\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@66","endTime":798502.858,"annotations":[]}
+{"type":"after","callId":"hook@42","endTime":798506.874,"annotations":[]}
+{"type":"before","callId":"attach@6bcd1da4f97b563c6ba8c772ab58c023","stepId":"attach@6bcd1da4f97b563c6ba8c772ab58c023","startTime":800482.044,"class":"Test","method":"test.attach","title":"Attach \"trace\"","params":{},"stack":[]}
+{"type":"after","callId":"attach@6bcd1da4f97b563c6ba8c772ab58c023","endTime":800483.101,"attachments":[]}

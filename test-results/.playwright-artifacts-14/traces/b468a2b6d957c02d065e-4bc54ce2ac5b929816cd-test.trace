@@ -1,0 +1,55 @@
+{"version":8,"type":"context-options","origin":"testRunner","browserName":"","playwrightVersion":"1.59.1","options":{},"platform":"win32","wallTime":1776043885636,"monotonicTime":789999.493,"sdkLanguage":"javascript"}
+{"type":"before","callId":"hook@1","stepId":"hook@1","startTime":790009.907,"class":"Test","method":"hook","title":"Before Hooks","params":{},"stack":[]}
+{"type":"before","callId":"hook@2","stepId":"hook@2","parentId":"hook@1","startTime":790011.519,"class":"Test","method":"hook","title":"beforeEach hook","params":{},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":4,"column":10}]}
+{"type":"before","callId":"fixture@28","stepId":"fixture@28","parentId":"hook@2","startTime":790046.131,"class":"Test","method":"fixture","title":"Fixture \"browser\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@29","stepId":"pw:api@29","parentId":"fixture@28","startTime":790056.097,"class":"Test","method":"pw:api","title":"Launch browser","params":{"handleSIGINT":"false","tracesDir":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\test-results\\.playwright-artifacts-14\\traces","artifactsDir":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\test-results\\.playwright-artifacts-14","headless":"true","ignoreDefaultArgs":"undefined","ignoreAllDefaultArgs":"false","env":"undefined","timeout":"180000"},"stack":[]}
+{"type":"after","callId":"pw:api@29","endTime":790580.943,"annotations":[]}
+{"type":"after","callId":"fixture@28","endTime":790581.353,"annotations":[]}
+{"type":"before","callId":"fixture@32","stepId":"fixture@32","parentId":"hook@2","startTime":790584.59,"class":"Test","method":"fixture","title":"Fixture \"context\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@33","stepId":"pw:api@33","parentId":"fixture@32","startTime":790587.843,"class":"Test","method":"pw:api","title":"Create context","params":{"selectorEngines":"[]","testIdAttributeName":"data-testid","acceptDownloads":"accept","bypassCSP":"false","colorScheme":"light","deviceScaleFactor":"1","hasTouch":"false","ignoreHTTPSErrors":"false","isMobile":"false","javaScriptEnabled":"true","locale":"en-US","offline":"false","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36","viewport":"Object","baseURL":"http://localhost:5173","serviceWorkers":"allow","noDefaultViewport":"false","extraHTTPHeaders":"undefined","storageState":"undefined","reducedMotion":"undefined","forcedColors":"undefined","contrast":"undefined","clientCertificates":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@33","endTime":790646.885,"annotations":[]}
+{"type":"after","callId":"fixture@32","endTime":790653.528,"annotations":[]}
+{"type":"before","callId":"fixture@34","stepId":"fixture@34","parentId":"hook@2","startTime":790654.321,"class":"Test","method":"fixture","title":"Fixture \"page\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@35","stepId":"pw:api@35","parentId":"fixture@34","startTime":790657.925,"class":"Test","method":"pw:api","title":"Create page","params":{},"stack":[]}
+{"type":"after","callId":"pw:api@35","endTime":791259.778,"annotations":[]}
+{"type":"after","callId":"fixture@34","endTime":791260.03,"annotations":[]}
+{"type":"before","callId":"pw:api@36","stepId":"pw:api@36","parentId":"hook@2","startTime":791268.854,"class":"Test","method":"pw:api","title":"Navigate to \"/game.html\"","params":{"url":"/game.html","waitUntil":"load","timeout":"0"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":11,"column":20}]}
+{"type":"stdout","timestamp":793147.689,"text":"BROWSER LOG: ✔ Firebase initialized successfully\n"}
+{"type":"stdout","timestamp":793148.285,"text":"BROWSER LOG: Autoplay blocked. Waiting for user interaction.\n"}
+{"type":"after","callId":"pw:api@36","endTime":795327.043,"annotations":[]}
+{"type":"before","callId":"pw:api@37","stepId":"pw:api@37","parentId":"hook@2","startTime":795330.337,"class":"Test","method":"pw:api","title":"Wait for function","params":{"pollingInterval":"undefined","expression":"() => typeof window.setPlayerAndStart === 'function'","isFunction":"true","arg":"Object","timeout":"0"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":12,"column":20}]}
+{"type":"after","callId":"pw:api@37","endTime":796009.614,"annotations":[]}
+{"type":"before","callId":"pw:api@38","stepId":"pw:api@38","parentId":"hook@2","startTime":796012.299,"class":"Test","method":"pw:api","title":"Wait for timeout","params":{"waitTimeout":"1000"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":13,"column":20}]}
+{"type":"after","callId":"pw:api@38","endTime":797367.044,"annotations":[]}
+{"type":"after","callId":"hook@2","endTime":797367.584,"annotations":[]}
+{"type":"after","callId":"hook@1","endTime":797368.628,"annotations":[]}
+{"type":"before","callId":"pw:api@39","stepId":"pw:api@39","startTime":797370.996,"class":"Test","method":"pw:api","title":"Evaluate","params":{"expression":"() => {\n      window.gameDifficulty = 'HARD';\n      window.setPlayerAndStart(1);\n      window.instances[0].difficulty = 'HARD';\n    }","isFunction":"true","arg":"Object"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":25,"column":20}]}
+{"type":"after","callId":"pw:api@39","endTime":797734.768,"annotations":[]}
+{"type":"before","callId":"pw:api@40","stepId":"pw:api@40","startTime":797742.659,"class":"Test","method":"pw:api","title":"Evaluate","params":{"expression":"lvl => {\n        const inst = window.instances[0];\n        while (Math.round(inst.stairs[inst.stairs.length - 1].y / 160) < lvl) {\n          inst.generateStair();\n        }\n        return {\n          pathCount: inst.pathCols.length\n        };\n      }","isFunction":"true","arg":"Object"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":32,"column":31,"function":"checkCycleState"}]}
+{"type":"after","callId":"pw:api@40","endTime":797799.567,"annotations":[]}
+{"type":"before","callId":"expect@41","stepId":"expect@41","startTime":797807.56,"class":"Test","method":"expect","title":"Expect \"toBe\"","params":{"expected":"2"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":42,"column":36}]}
+{"type":"after","callId":"expect@41","endTime":797808.941,"annotations":[]}
+{"type":"before","callId":"pw:api@42","stepId":"pw:api@42","startTime":797810.898,"class":"Test","method":"pw:api","title":"Evaluate","params":{"expression":"lvl => {\n        const inst = window.instances[0];\n        while (Math.round(inst.stairs[inst.stairs.length - 1].y / 160) < lvl) {\n          inst.generateStair();\n        }\n        return {\n          pathCount: inst.pathCols.length\n        };\n      }","isFunction":"true","arg":"Object"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":32,"column":31,"function":"checkCycleState"}]}
+{"type":"after","callId":"pw:api@42","endTime":797850.986,"annotations":[]}
+{"type":"before","callId":"expect@43","stepId":"expect@43","startTime":797853.451,"class":"Test","method":"expect","title":"Expect \"toBe\"","params":{"expected":"1"},"stack":[{"file":"C:\\Users\\user\\Desktop\\AntiBase\\createGame\\tests\\game_logic.spec.js","line":44,"column":36}]}
+{"type":"after","callId":"expect@43","endTime":797853.607,"annotations":[]}
+{"type":"before","callId":"hook@44","stepId":"hook@44","startTime":797854.396,"class":"Test","method":"hook","title":"After Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@45","stepId":"fixture@45","parentId":"hook@44","startTime":797856.437,"class":"Test","method":"fixture","title":"Fixture \"page\"","params":{},"stack":[]}
+{"type":"after","callId":"fixture@45","endTime":797857.126,"annotations":[]}
+{"type":"before","callId":"fixture@46","stepId":"fixture@46","parentId":"hook@44","startTime":797858.099,"class":"Test","method":"fixture","title":"Fixture \"context\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@47","stepId":"pw:api@47","parentId":"fixture@46","startTime":799730.952,"class":"Test","method":"pw:api","title":"Close context","params":{"reason":"Test ended."},"stack":[]}
+{"type":"after","callId":"pw:api@47","endTime":799896.976,"annotations":[]}
+{"type":"after","callId":"fixture@46","endTime":799897.202,"annotations":[]}
+{"type":"before","callId":"fixture@52","stepId":"fixture@52","parentId":"hook@44","startTime":799904.092,"class":"Test","method":"fixture","title":"Fixture \"baseURL\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@52","endTime":799904.182,"annotations":[]}
+{"type":"before","callId":"fixture@53","stepId":"fixture@53","parentId":"hook@44","startTime":799904.869,"class":"Test","method":"fixture","title":"Fixture \"userAgent\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@53","endTime":799904.957,"annotations":[]}
+{"type":"before","callId":"fixture@55","stepId":"fixture@55","parentId":"hook@44","startTime":799906.47,"class":"Test","method":"fixture","title":"Fixture \"viewport\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@55","endTime":799906.637,"annotations":[]}
+{"type":"before","callId":"fixture@62","stepId":"fixture@62","parentId":"hook@44","startTime":799909.965,"class":"Test","method":"fixture","title":"Fixture \"isMobile\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@62","endTime":799910.039,"annotations":[]}
+{"type":"before","callId":"fixture@66","stepId":"fixture@66","parentId":"hook@44","startTime":799912.353,"class":"Test","method":"fixture","title":"Fixture \"hasTouch\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@66","endTime":799912.425,"annotations":[]}
+{"type":"before","callId":"fixture@68","stepId":"fixture@68","parentId":"hook@44","startTime":799913.244,"class":"Test","method":"fixture","title":"Fixture \"deviceScaleFactor\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@68","endTime":799913.299,"annotations":[]}
+{"type":"after","callId":"hook@44","endTime":799917.11,"annotations":[]}
