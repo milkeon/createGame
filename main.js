@@ -68,6 +68,7 @@ const pauseOverlay = document.getElementById('pause-overlay');
 let lastTimestamp = 0;
 let isBackgroundStudyHidden = false; // [New] 1인용 플레이 시 배경 공부창 노출 여부
 let instances = [];
+window.instances = instances; // 테스트 접근용 노출
 let playerCount = 1;
 let isPaused = false;
 
@@ -764,7 +765,7 @@ function init() {
 
 window.setPlayerAndStart = function (count) {
     playerCount = count;
-    instances = [];
+    instances.length = 0; // 참조 유지를 위해 length를 0으로 설정
     for (let i = 0; i < count; i++) instances.push(new GameInstance(i));
 
     uiOverlay.className = count === 3 ? 'three-player' : (count === 2 ? 'two-player' : 'single-player');
