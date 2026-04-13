@@ -1022,7 +1022,11 @@ window.submitRecord = function (mode, score) {
     hideNameModal();
 };
 
-// [New] 랭킹 보드 렌더링
+// 테스트를 위한 추가 노출
+window.handleRankingAtGameOver = handleRankingAtGameOver;
+window.saveLearnedConcept = saveLearnedConcept;
+
+// [New] 전역 보드 렌더러
 function renderLeaderboards() {
     const globalBoard = document.getElementById('global-leaderboard');
     const localBoard = document.getElementById('local-best-board');
