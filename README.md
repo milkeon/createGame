@@ -58,7 +58,9 @@ https://create-game-kosta.vercel.app/
 ### 3. 테스트 실행 증빙
 | 터미널 실행 결과 (npm test) | UI 모드 화면 (npm run test:ui) |
 | :---: | :---: |
-| ![Terminal](C:\Users\user\.gemini\antigravity\brain\43963ca4-5c7d-4c78-92ae-f0db475ccf30\terminal_snapshot_1776044889218.png) | ![UI Mode](C:\Users\user\.gemini\antigravity\brain\43963ca4-5c7d-4c78-92ae-f0db475ccf30\ui_mode_snapshot_1776044981706.png) |
+| ![Terminal]<img width="876" height="716" alt="image" src="https://github.com/user-attachments/assets/aa23d3f9-debe-4e6e-bcf1-b24b2ad769f7" />
+ | ![UI Mode]<img width="1912" height="1004" alt="image" src="https://github.com/user-attachments/assets/12ec302b-a4ec-4a18-ab88-38227df22cec" />
+|
 
 ---
 
