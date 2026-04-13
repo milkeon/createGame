@@ -56,6 +56,10 @@ https://create-game-kosta.vercel.app/
 ---
 
 ### 3. 테스트 실행 증빙
+테스트는 playwrite 라이브러리를 통해 진행했습니다.
+
+- **플레이라이트**는 마이크로소프트에서 만든 웹 브라우저 자동화 및 테스트 도구입니다. 브라우저에서 사람이 직접 동작을 테스트하지 않아도 사용자의 행동을 시나리오로 만들어 테스트를 실행해 줍니다.
+
 | 터미널 실행 결과 (npm test) | UI 모드 화면 (npm run test:ui) |
 | :---: | :---: |
 | ![Terminal]<img width="876" height="716" alt="image" src="https://github.com/user-attachments/assets/aa23d3f9-debe-4e6e-bcf1-b24b2ad769f7" />
